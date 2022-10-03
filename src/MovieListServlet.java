@@ -10,15 +10,15 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 // This annotation maps this Java Servlet Class to a URL
-@WebServlet("/stars")
-public class StarServlet extends HttpServlet {
+@WebServlet("/movie_list")
+public class MovieListServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // Change this to your own mysql username and password
         String loginUser = "mytestuser";
         String loginPasswd = "My6$Password";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedbexample";
+        String loginUrl = "jdbc:mysql://localhost:3306/Fabflix";
 
         // Set response mime type
         response.setContentType("text/html");
@@ -30,39 +30,47 @@ public class StarServlet extends HttpServlet {
         out.println("<head><title>Fabflix</title></head>");
 
         try {
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
             // create database connection
             Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
             // declare statement
             Statement statement = connection.createStatement();
             // prepare query
-            String query = "SELECT * from stars limit 10";
+            String query = "SELECT m.id, m.title, m.year, m.director, r.rating\n" +
+                    "FROM movies AS m, ratings AS r\n" +
+                    "WHERE m.id = r.movieId\n" +
+                    "ORDER BY r.rating DESC\n" +
+                    "LIMIT 20";
             // execute query
             ResultSet resultSet = statement.executeQuery(query);
 
             out.println("<body>");
-            out.println("<h1>MovieDB Stars</h1>");
+            out.println("<h1>Top Rated Movies</h1>");
 
             out.println("<table border>");
 
             // Add table header row
             out.println("<tr>");
-            out.println("<td>id</td>");
-            out.println("<td>name</td>");
-            out.println("<td>birth year</td>");
+            out.println("<td>Title</td>");
+            out.println("<td>Year</td>");
+            out.println("<td>Director</td>");
+            out.println("<td>Rating</td>");
             out.println("</tr>");
 
             // Add a row for every star result
             while (resultSet.next()) {
                 // get a star from result set
-                String starID = resultSet.getString("id");
-                String starName = resultSet.getString("name");
-                String birthYear = resultSet.getString("birthyear");
+                String movieID = resultSet.getString("ID");
+                String movieTitle = resultSet.getString("Title");
+                String movieYear = resultSet.getString("Year");
+                String movieDirector = resultSet.getString("Director");
+                String movieRating = resultSet.getString("Rating");
 
                 out.println("<tr>");
-                out.println("<td>" + starID + "</td>");
-                out.println("<td>" + starName + "</td>");
-                out.println("<td>" + birthYear + "</td>");
+                out.println("<td>" + movieTitle+ "</td>");
+                out.println("<td>" + movieYear + "</td>");
+                out.println("<td>" + movieDirector + "</td>");
+                out.println("<td>" + movieRating + "</td>");
                 out.println("</tr>");
             }
 
