@@ -39,8 +39,7 @@ public class MovieListServlet extends HttpServlet {
             String query = "SELECT m.id, m.title, m.year, m.director, r.rating\n" +
                     "FROM movies AS m, ratings AS r\n" +
                     "WHERE m.id = r.movieId\n" +
-                    "ORDER BY r.rating DESC\n" +
-                    "LIMIT 20";
+                    "ORDER BY r.rating DESC";
             // execute query
             ResultSet resultSet = statement.executeQuery(query);
 
@@ -57,8 +56,11 @@ public class MovieListServlet extends HttpServlet {
             out.println("<td>Rating</td>");
             out.println("</tr>");
 
+            int numMoviesToDisplay = 20;
+            int curNumMovies = 0;
+
             // Add a row for every star result
-            while (resultSet.next()) {
+            while (resultSet.next() && curNumMovies < numMoviesToDisplay ) {
                 // get a star from result set
                 String movieID = resultSet.getString("ID");
                 String movieTitle = resultSet.getString("Title");
@@ -72,6 +74,7 @@ public class MovieListServlet extends HttpServlet {
                 out.println("<td>" + movieDirector + "</td>");
                 out.println("<td>" + movieRating + "</td>");
                 out.println("</tr>");
+                ++curNumMovies;
             }
 
             out.println("</table>");
