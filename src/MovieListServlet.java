@@ -36,9 +36,9 @@ public class MovieListServlet extends HttpServlet {
             // declare statement
             Statement statement = connection.createStatement();
             // prepare query
-            String query = "SELECT m.id, m.title, m.year, m.director, r.rating\n" +
-                    "FROM movies AS m, ratings AS r\n" +
-                    "WHERE m.id = r.movieId\n" +
+            String query = "SELECT m.id, m.title, m.year, m.director, r.rating, g.name AS genres\n" +
+                    "FROM movies AS m, ratings AS r, genres_in_movies AS gm, genres AS g\n" +
+                    "WHERE m.id = r.movieId AND m.id = gm.movieId AND gm.genreID = g.id \n" +
                     "ORDER BY r.rating DESC";
             // execute query
             ResultSet resultSet = statement.executeQuery(query);
@@ -53,28 +53,60 @@ public class MovieListServlet extends HttpServlet {
             out.println("<td>Title</td>");
             out.println("<td>Year</td>");
             out.println("<td>Director</td>");
+            out.println("<td>Genres</td");
             out.println("<td>Rating</td>");
             out.println("</tr>");
 
+            resultSet.next();
             int numMoviesToDisplay = 20;
-            int curNumMovies = 0;
+            int curNumMovies = 1;
+            int curNumGenres = 1;
+            String prevMovieID = "";
+            String movieID = resultSet.getString("ID");
+            String movieTitle = resultSet.getString("Title");
+            String movieYear = resultSet.getString("Year");
+            String movieDirector = resultSet.getString("Director");
+            String movieGenre = resultSet.getString("Genres");
+            String movieGenres = movieGenre;
+            String movieRating = resultSet.getString("Rating");
 
             // Add a row for every star result
             while (resultSet.next() && curNumMovies < numMoviesToDisplay ) {
                 // get a star from result set
-                String movieID = resultSet.getString("ID");
-                String movieTitle = resultSet.getString("Title");
-                String movieYear = resultSet.getString("Year");
-                String movieDirector = resultSet.getString("Director");
-                String movieRating = resultSet.getString("Rating");
 
-                out.println("<tr>");
-                out.println("<td>" + movieTitle+ "</td>");
-                out.println("<td>" + movieYear + "</td>");
-                out.println("<td>" + movieDirector + "</td>");
-                out.println("<td>" + movieRating + "</td>");
-                out.println("</tr>");
-                ++curNumMovies;
+                // TODO check if the next database entries are of the same movie
+                //if they are, append to previous values
+                //if they are not, print the previous values and update current ones
+
+
+                if(movieID.equals(prevMovieID))
+                {
+                    // check for extra genres
+                    if(!movieGenres.contains(movieGenre) && curNumGenres < 3) {
+                        movieGenres += ", " + movieGenre;
+                        ++curNumGenres;
+                    }
+                }
+                else {
+                    ++curNumMovies;
+                    prevMovieID = movieID;
+
+                    out.println("<tr>");
+                    out.println("<td>" + movieTitle+ "</td>");
+                    out.println("<td>" + movieYear + "</td>");
+                    out.println("<td>" + movieDirector + "</td>");
+                    out.println("<td>" + movieGenres + "</td>");
+                    out.println("<td>" + movieRating + "</td>");
+                    out.println("</tr>");
+                }
+
+                movieID = resultSet.getString("ID");
+                movieTitle = resultSet.getString("Title");
+                movieYear = resultSet.getString("Year");
+                movieDirector = resultSet.getString("Director");
+                movieGenre = resultSet.getString("Genres");
+                movieRating = resultSet.getString("Rating");
+
             }
 
             out.println("</table>");
