@@ -1,4 +1,3 @@
-import javax.management.Query;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -67,7 +66,7 @@ public class MovieListServlet extends HttpServlet {
             String movieGenre = resultSet.getString("Genres");
             String movieGenres = movieGenre;
             String movieRating = resultSet.getString("Rating");
-            ArrayList<String> starList = getStars(movieID);
+            ArrayList<Star> starList = getStars(movieID);
 
             // Add a row for every star result
             while (resultSet.next() && curNumMovies < numMoviesToDisplay ) {
@@ -91,7 +90,7 @@ public class MovieListServlet extends HttpServlet {
                     out.println("<td>" + movieDirector + "</td>");
                     out.println("<td>" + movieGenres + "</td>");
                     out.println("<td>" + movieRating + "</td>");
-                    out.println("<td>" + convertToString(starList) + "</td>");
+                    out.println("<td><ul>" + getStarListHTML(starList) + "</ul></td>");
                     out.println("</tr>");
                 }
 
@@ -135,22 +134,26 @@ public class MovieListServlet extends HttpServlet {
 
     }
 
-        ArrayList<String> getStars(String movieID)
+        ArrayList<Star> getStars(String movieID)
         {
-            ArrayList<String> starList = new ArrayList<>();
+            ArrayList<Star> starList = new ArrayList<>();
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
                 // create database connection
                 Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
                 // declare statement
                 Statement statement = connection.createStatement();
-                String query = "SELECT s.name AS stars_name\n" +
+                String query = "SELECT *" +
                         "FROM movies m, stars_in_movies sm, stars s \n" +
                         "WHERE m.id = '" + movieID + "' AND m.id = sm.movieId AND sm.starId = s.id";
                 ResultSet starResult = statement.executeQuery(query);
                 while(starResult.next())
                 {
-                    starList.add(starResult.getString("stars_name"));
+                    String starId = starResult.getString("starId");
+                    String starName = starResult.getString("name");
+                    int starBirthYear = starResult.getInt("birthYear");
+                    Star star = new Star(starId, starName, starBirthYear);
+                    starList.add(star);
                 }
                 starResult.close();
                 statement.close();
@@ -164,9 +167,17 @@ public class MovieListServlet extends HttpServlet {
             return starList;
         }
 
-        String convertToString(ArrayList<String> list) {
-            String s = list.subList(0, 3).toString();
-            s = s.substring(1, s.length() - 1);
+        String getStarListHTML(ArrayList<Star> starList) {
+            String s = "";
+            int listItemLimit = 3;
+            for(int i = 0; i < listItemLimit; ++i)
+            {
+                Star star = starList.get(i);
+                String starId = star.getId();
+                String starName = star.getName();
+                s += "<li><a href=\"/Fabflix_war/single-star?id=" + starId +
+                        "\">" + starName + "</a></li>\n";
+            }
             return s;
         }
 
