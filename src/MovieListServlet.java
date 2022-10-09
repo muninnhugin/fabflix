@@ -71,8 +71,6 @@ public class MovieListServlet extends HttpServlet {
 
             // Add a row for every star result
             while (resultSet.next() && curNumMovies < numMoviesToDisplay ) {
-                // get a star from result set
-
                 if(movieID.equals(prevMovieID))
                 {
                     // check for extra genres
@@ -86,7 +84,9 @@ public class MovieListServlet extends HttpServlet {
                     prevMovieID = movieID;
 
                     out.println("<tr>");
-                    out.println("<td>" + movieTitle + "</td>");
+                    out.println("<td>" +
+                            "<a href=\"/Fabflix_war/single-movie?id=" + movieID +
+                            "\">" + movieTitle + "</a></td>");
                     out.println("<td>" + movieYear + "</td>");
                     out.println("<td>" + movieDirector + "</td>");
                     out.println("<td>" + movieGenres + "</td>");
@@ -137,7 +137,7 @@ public class MovieListServlet extends HttpServlet {
 
         ArrayList<String> getStars(String movieID)
         {
-            ArrayList<String> starList = new ArrayList<String>();
+            ArrayList<String> starList = new ArrayList<>();
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
                 // create database connection
