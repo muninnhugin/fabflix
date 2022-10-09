@@ -27,7 +27,6 @@ public class MovieListServlet extends HttpServlet {
         out.println("<head><title>Fabflix</title></head>");
 
         try {
-            // TODO for each movie do a separate query for stars
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
             // create database connection
             Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
