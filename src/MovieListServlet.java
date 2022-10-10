@@ -184,7 +184,7 @@ public class MovieListServlet extends HttpServlet {
         return s;
     }
 
-    // TODO: refactor arrayListToString so that all files can access it
+    // TODO: refactor helper functions so that all files can access it
     String arrayListToString(ArrayList<String> list) {
         String s = list.toString();
         s = s.substring(1, s.length() - 1);
