@@ -11,4 +11,7 @@ public class Movie {
         year = newYear;
         director = newDirector;
     }
+
+    String getId()      { return id; }
+    String getTitle()   { return title; }
 }
