@@ -30,7 +30,7 @@ public class SingleMovieServlet extends HttpServlet {
 
         out.println("<html>");
         out.println("<head><title>Fabflix</title></head>");
-        out.println("<p><a href=\"/Fabflix_war/movie-list\"> Top Movies </a></p>");
+        out.println("<p><a href=\"/Fabflix/movie-list\"> Top Movies </a></p>");
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
@@ -161,7 +161,7 @@ public class SingleMovieServlet extends HttpServlet {
             Star star = starList.get(i);
             String starId = star.getId();
             String starName = star.getName();
-            s += "<li><a href=\"/Fabflix_war/single-star?id=" + starId +
+            s += "<li><a href=\"/Fabflix/single-star?id=" + starId +
                     "\">" + starName + "</a></li>\n";
         }
         return s;

@@ -69,7 +69,7 @@ public class MovieListServlet extends HttpServlet {
                 out.println("<tr>");
                 //movie title is hyperlinked to single movie page
                 out.println("<td>" +
-                        "<a href=\"/Fabflix_war/single-movie?id=" + movieID +
+                        "<a href=\"/Fabflix/single-movie?id=" + movieID +
                         "\">" + movieTitle + "</a></td>");
                 out.println("<td>" + movieYear + "</td>");
                 out.println("<td>" + movieDirector + "</td>");
@@ -179,7 +179,7 @@ public class MovieListServlet extends HttpServlet {
             Star star = starList.get(i);
             String starId = star.getId();
             String starName = star.getName();
-            s += "<li><a href=\"/Fabflix_war/single-star?id=" + starId +
+            s += "<li><a href=\"/Fabflix/single-star?id=" + starId +
                     "\">" + starName + "</a></li>\n";
         }
         return s;
