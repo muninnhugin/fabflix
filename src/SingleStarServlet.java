@@ -67,14 +67,16 @@ public class SingleStarServlet extends HttpServlet {
 
             // Add a row for every movie result
             while (resultSet.next()) {
+                String movieId = resultSet.getString("movieId");
                 String movieTitle = resultSet.getString("title");
-                String movieYear = resultSet.getString("year");
+                int movieYear = resultSet.getInt("year");
                 String movieDirector = resultSet.getString("director");
+                Movie movie = new Movie(movieId, movieTitle, movieYear, movieDirector);
 
                 out.println("<tr>");
-                out.println("<td>" + movieTitle + "</td>");
-                out.println("<td>" + movieYear + "</td>");
-                out.println("<td>" + movieDirector + "</td>");
+                out.println("<td>" + movie.getTitle() + "</td>");
+                out.println("<td>" + movie.getYear() + "</td>");
+                out.println("<td>" + movie.getDirector() + "</td>");
                 out.println("</tr>");
 
             }
