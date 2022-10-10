@@ -47,7 +47,7 @@ public class SingleStarServlet extends HttpServlet {
             String starName = resultSet.getString("name");
             String starBirthYear = resultSet.getString("birthYear");
 
-            out.println("<body>");
+            out.println("<body style=\"background-color:#fff3e0\">");
             out.println("<h1>" + starName +"</h1>");
             out.println("<p>Born in: " + starBirthYear);
             out.println("<p></p>");

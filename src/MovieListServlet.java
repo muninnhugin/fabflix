@@ -40,7 +40,7 @@ public class MovieListServlet extends HttpServlet {
             // execute query
             ResultSet resultSet = statement.executeQuery(query);
 
-            out.println("<body>");
+            out.println("<body style=\"background-color:#fff3e0\">");
             out.println("<h1>Top Rated Movies</h1>");
             out.println("<table border>");
 

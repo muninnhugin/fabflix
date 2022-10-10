@@ -53,7 +53,7 @@ public class SingleMovieServlet extends HttpServlet {
             String movieGenres = arrayListToString(getGenres(id));
             ArrayList<Star> movieStars = getStars(id);
 
-            out.println("<body>");
+            out.println("<body style=\"background-color:#fff3e0\">");
             out.println("<h1>Movie Details</h1>");
             out.println("<p>Title: " + movieTitle + "</p>");
             out.println("<p>Year: " + movieYear + "</p>");
