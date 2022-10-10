@@ -10,6 +10,8 @@ public class Star {
         birthYear = newBirthYear;
     }
 
+    //TODO add constructor that takes ResultSet.next()
+
     String getId() {
         return id;
     }
