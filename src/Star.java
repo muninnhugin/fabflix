@@ -18,8 +18,6 @@ public class Star {
         return name;
     }
 
-    int getBirthYear() {
-        return birthYear;
-    }
+    int getBirthYear() { return birthYear; }
 
 }
