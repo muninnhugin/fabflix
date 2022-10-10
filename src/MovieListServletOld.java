@@ -69,7 +69,7 @@ public class MovieListServlet extends HttpServlet {
             ArrayList<Star> starList = getStars(movieID);
 
             // Add a row for every star result
-            while (resultSet.next() && curNumMovies < numMoviesToDisplay ) {
+            while (resultSet.next() && curNumMovies <= numMoviesToDisplay ) {
                 if(movieID.equals(prevMovieID))
                 {
                     // check for extra genres
