@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
+import java.util.ArrayList;
 
 // This annotation maps this Java Servlet Class to a URL
 @WebServlet("/single-star")
@@ -60,21 +61,21 @@ public class SingleStarServlet extends HttpServlet {
             out.println("</tr>");
 
             // query for movies star has starred in
-            query = "SELECT m.title, m.year, m.director\n" +
+            query = "SELECT m.id, m.title, m.year, m.director\n" +
                     "FROM movies AS m, stars_in_movies AS sm\n" +
                     "WHERE sm.starId = \"" + id + "\" AND sm.movieId = m.id";
             resultSet = statement.executeQuery(query);
 
             // Add a row for every movie result
             while (resultSet.next()) {
-                String movieId = resultSet.getString("movieId");
+                String movieId = resultSet.getString("m.id");
                 String movieTitle = resultSet.getString("title");
                 int movieYear = resultSet.getInt("year");
                 String movieDirector = resultSet.getString("director");
                 Movie movie = new Movie(movieId, movieTitle, movieYear, movieDirector);
 
                 out.println("<tr>");
-                out.println("<td>" + movie.getTitle() + "</td>");
+                out.println("<td>" + getHyperlinkedMovieTitle(movie) + "</td>");
                 out.println("<td>" + movie.getYear() + "</td>");
                 out.println("<td>" + movie.getDirector() + "</td>");
                 out.println("</tr>");
@@ -109,6 +110,15 @@ public class SingleStarServlet extends HttpServlet {
 
         out.println("</html>");
         out.close();
+    }
+
+    String getHyperlinkedMovieTitle(Movie movie) {
+        String s = "";
+        String movieId = movie.getId();
+        String movieTitle = movie.getTitle();
+        s = "<li><a href=\"/Fabflix_war/single-movie?id=" + movieId +
+                "\">" + movieTitle + "</a></li>\n";
+        return s;
     }
 }
 
