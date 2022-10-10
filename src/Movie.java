@@ -12,6 +12,8 @@ public class Movie {
         director = newDirector;
     }
 
+    //TODO add constructor that takes ResultSet.next()
+
     String getId()      { return id; }
     String getTitle()   { return title; }
 }
