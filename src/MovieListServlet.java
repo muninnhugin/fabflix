@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.sql.*;
 import java.util.ArrayList;
 
+// TODO change this page to landing page
 // This annotation maps this Java Servlet Class to a URL
 @WebServlet("/movie-list")
 public class MovieListServlet extends HttpServlet {
