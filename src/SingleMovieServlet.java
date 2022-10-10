@@ -30,6 +30,7 @@ public class SingleMovieServlet extends HttpServlet {
 
         out.println("<html>");
         out.println("<head><title>Fabflix</title></head>");
+        out.println("<p><a href=\"/Fabflix_war/movie-list\"> Top Movies </a></p>");
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
