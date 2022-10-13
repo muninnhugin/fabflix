@@ -18,4 +18,13 @@ public class Movie {
     String getTitle()       { return title; }
     int getYear()           { return year; }
     String getDirector()    { return director; }
+
+    String getHyperlinkedMovieTitle() {
+        String s = "";
+        String movieId = getId();
+        String movieTitle = getTitle();
+        s = "<li><a href=\"/Fabflix/single-movie?id=" + movieId +
+                "\">" + movieTitle + "</a></li>\n";
+        return s;
+    }
 }
