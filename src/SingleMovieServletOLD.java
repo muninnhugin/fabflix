@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 // This annotation maps this Java Servlet Class to a URL
 @WebServlet("/single-movie")
-public class SingleMovieServlet extends HttpServlet {
+public class SingleMovieServletOLD extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final String loginUser = "mytestuser";
     private static final String loginPasswd = "My6$Password";

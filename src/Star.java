@@ -21,4 +21,5 @@ public class Star {
     }
 
     int getBirthYear() { return birthYear; }
+
 }

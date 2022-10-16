@@ -1,30 +1,36 @@
 public class Movie {
-    String id = "";
-    String title = "";
-    int year;
-    String director = "";
+    private String id = "";
+    private String title = "";
+    private int year;
+    private String director = "";
+    private double rating;
 
-    Movie(String newId, String newTitle, int newYear, String newDirector)
+    Movie(String newId, String newTitle, int newYear, String newDirector, double newRating)
     {
         id = newId;
         title = newTitle;
         year = newYear;
         director = newDirector;
+        rating = newRating;
     }
 
-    //TODO add constructor that takes ResultSet.next()
+    public String getId() {
+        return id;
+    }
 
-    String getId()          { return id; }
-    String getTitle()       { return title; }
-    int getYear()           { return year; }
-    String getDirector()    { return director; }
+    public String getTitle() {
+        return title;
+    }
 
-    String getHyperlinkedMovieTitle() {
-        String s = "";
-        String movieId = getId();
-        String movieTitle = getTitle();
-        s = "<li><a href=\"/Fabflix/single-movie?id=" + movieId +
-                "\">" + movieTitle + "</a></li>\n";
-        return s;
+    public int getYear() {
+        return year;
+    }
+
+    public String getDirector() {
+        return director;
+    }
+
+    public double getRating() {
+        return rating;
     }
 }
