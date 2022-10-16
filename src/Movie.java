@@ -1,6 +1,8 @@
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class Movie {
     private String id = "";
@@ -8,6 +10,7 @@ public class Movie {
     private int year;
     private String director = "";
     private double rating;
+    private ArrayList<Genre> genreList;
 
     Movie(String newId, String newTitle, int newYear, String newDirector, double newRating)
     {
@@ -16,15 +19,17 @@ public class Movie {
         year = newYear;
         director = newDirector;
         rating = newRating;
+        genreList = new ArrayList<>();
     }
 
     Movie(ResultSet rs) throws SQLException
     {
-            id = rs.getString("id");
-            title = rs.getString("title");
-            year = rs.getInt("year");
-            director = rs.getString("director");
-            rating = rs.getDouble("rating");
+        id = rs.getString("id");
+        title = rs.getString("title");
+        year = rs.getInt("year");
+        director = rs.getString("director");
+        rating = rs.getDouble("rating");
+        genreList = new ArrayList<>();
     }
 
     public String getId() {
@@ -47,7 +52,11 @@ public class Movie {
         return rating;
     }
 
-    public JsonObject toJsonObject() {
+    public ArrayList<Genre> getGenreList() {
+        return genreList;
+    }
+
+    public JsonObject toJson() {
         JsonObject movieJson = new JsonObject();
 
         movieJson.addProperty("movie_id", id);
@@ -57,5 +66,11 @@ public class Movie {
         movieJson.addProperty("movie_rating", rating);
 
         return movieJson;
+    }
+
+    public Movie addGenre(Genre newGenre)
+    {
+        genreList.add(newGenre);
+        return this;
     }
 }

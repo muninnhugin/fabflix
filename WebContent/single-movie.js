@@ -29,6 +29,13 @@ function handleResult(resultData) {
         "<p>Year: " + resultData[0]["movie_year"] + "</p>" +
         "<p>Director: " + resultData[0]["movie_director"] + "</p>" +
         "<p>Rating: " + resultData[0]["movie_rating"] + "</p>");
+
+    movieInfoElement.append("<p>Genre</p>");
+    let genreListElement = jQuery("#genre_list");
+    for(let i = 0; i < resultData[1].length; ++i)
+    {
+        genreListElement.append("<li>"+ resultData[1][i] + "</li>")
+    }
 }
 
 let movieId = getParameterByName('id');

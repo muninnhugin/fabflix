@@ -60,7 +60,7 @@ public class MovieListServlet extends HttpServlet {
             // Iterate through each row of rs
             while (rs.next()) {
                 Movie movie = new Movie(rs);
-                JsonObject movieJson = movie.toJsonObject();
+                JsonObject movieJson = movie.toJson();
                 movieJsons.add(movieJson);
             }
             rs.close();

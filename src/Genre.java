@@ -1,3 +1,8 @@
+import com.google.gson.JsonObject;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Genre {
     private String id = "";
     private String name = "";
@@ -8,11 +13,27 @@ public class Genre {
         name = newName;
     }
 
+    Genre(ResultSet rs) throws SQLException
+    {
+        id = rs.getString("id");
+        name = rs.getString("name");
+    }
+
     public String getId() {
         return id;
     }
 
     public String getName() {
         return name;
+    }
+
+    public JsonObject toJson()
+    {
+        JsonObject genreJson = new JsonObject();
+
+        genreJson.addProperty("genre_id", id);
+        genreJson.addProperty("genre_name", name);
+
+        return genreJson;
     }
 }

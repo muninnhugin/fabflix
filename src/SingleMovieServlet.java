@@ -69,12 +69,34 @@ public class SingleMovieServlet extends HttpServlet {
             // Perform the query
             ResultSet rs = statement.executeQuery();
 
-            if(rs.next())
+            rs.next();
+            Movie movie = new Movie(rs);
+
+            // TODO: refactor this code
+            query = "SELECT *\n" +
+                    "FROM movies m, genres_in_movies gm, genres g\n" +
+                    "WHERE m.id = ? AND m.id = gm.movieId AND gm.genreId = g.id";
+            statement = conn.prepareStatement(query);
+            statement.setString(1, id);
+            rs = statement.executeQuery();
+
+            // TODO: get genres for this movie
+            while(rs.next())
             {
-                Movie movie = new Movie(rs);
-                JsonObject movieJson = movie.toJsonObject();
-                jsonArray.add(movieJson);
+                Genre genre = new Genre(rs);
+                movie.addGenre(genre);
             }
+
+            JsonArray genresJson = new JsonArray();
+
+            for(Genre genre : movie.getGenreList())
+            {
+                genresJson.add(genre.getName());
+            }
+
+            JsonObject movieJson = movie.toJson();
+            jsonArray.add(movieJson);
+            jsonArray.add(genresJson);
 
             rs.close();
             statement.close();
