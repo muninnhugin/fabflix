@@ -1,4 +1,5 @@
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -65,7 +66,20 @@ public class Movie {
         movieJson.addProperty("movie_director", director);
         movieJson.addProperty("movie_rating", rating);
 
+        // TODO getAsJsonArray​ and getAsJsonObject to create Json for genres
+        movieJson.add("movie_genres", getGenreJsonArray());
+
         return movieJson;
+    }
+
+    public JsonArray getGenreJsonArray() {
+        JsonArray genreJsons = new JsonArray();
+        for (Genre genre : genreList)
+        {
+            JsonObject genreJson = genre.toJson();
+            genreJsons.add(genreJson);
+        }
+        return genreJsons;
     }
 
     public Movie addGenre(Genre newGenre)

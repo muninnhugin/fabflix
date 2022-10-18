@@ -52,8 +52,6 @@ public class SingleMovieServlet extends HttpServlet {
         try (Connection conn = dataSource.getConnection()) {
             // Get a connection from dataSource
 
-            JsonArray jsonArray = new JsonArray();
-
             // Construct a query with parameter represented by "?"
             String query = "SELECT * \n" +
                     "FROM movies m, ratings r\n" +
@@ -87,22 +85,13 @@ public class SingleMovieServlet extends HttpServlet {
                 movie.addGenre(genre);
             }
 
-            JsonArray genresJson = new JsonArray();
-
-            for(Genre genre : movie.getGenreList())
-            {
-                genresJson.add(genre.getName());
-            }
-
             JsonObject movieJson = movie.toJson();
-            jsonArray.add(movieJson);
-            jsonArray.add(genresJson);
 
             rs.close();
             statement.close();
 
             // Write JSON string to output
-            out.write(jsonArray.toString());
+            out.write(movieJson.toString());
             // Set response status to 200 (OK)
             response.setStatus(200);
 
