@@ -31,22 +31,11 @@ function handleResult(resultData) {
         "<p>Rating: " + resultData["movie_rating"] + "</p>");
 
 
-    movieInfoElement.append("<p>Genres:</p>" + "<div class=\"list-group\">");
-    let genresNum = Math.min(3, resultData["movie_genres"].length);
-    if(genresNum != 0)
-    {
-        for(let i = 0; i < genresNum; ++i)
-        {
-            movieInfoElement.append("<a class=\"list-group-item\"" + ">" + resultData["movie_genres"][i]["genre_name"] + "</a>");
-        }
-    }
-    else
-    {
-        movieInfoElement.append("<a>None</a>")
-    }
-    movieInfoElement.append("</div>");
+    getGenreJquery(movieInfoElement, resultData["movie_genres"]);
 
 }
+
+
 
 let movieId = getParameterByName('id');
 
