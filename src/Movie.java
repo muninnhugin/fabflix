@@ -1,5 +1,4 @@
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,6 +11,7 @@ public class Movie {
     private String director = "";
     private double rating;
     private ArrayList<Genre> genreList;
+    private ArrayList<Star> starList;
 
     Movie(String newId, String newTitle, int newYear, String newDirector, double newRating)
     {
@@ -21,16 +21,18 @@ public class Movie {
         director = newDirector;
         rating = newRating;
         genreList = new ArrayList<>();
+        starList = new ArrayList<>();
     }
 
     Movie(ResultSet rs) throws SQLException
     {
-        id = rs.getString("id");
+        id = rs.getString("movieId");
         title = rs.getString("title");
         year = rs.getInt("year");
         director = rs.getString("director");
         rating = rs.getDouble("rating");
         genreList = new ArrayList<>();
+        starList = new ArrayList<>();
     }
 
     public String getId() {
@@ -65,9 +67,8 @@ public class Movie {
         movieJson.addProperty("movie_year", year);
         movieJson.addProperty("movie_director", director);
         movieJson.addProperty("movie_rating", rating);
-
-        // TODO getAsJsonArray​ and getAsJsonObject to create Json for genres
         movieJson.add("movie_genres", getGenreJsonArray());
+        movieJson.add("movie_stars", getStarJsonArray());
 
         return movieJson;
     }
@@ -82,9 +83,25 @@ public class Movie {
         return genreJsons;
     }
 
+    public JsonArray getStarJsonArray() {
+        JsonArray starJsons = new JsonArray();
+        for (Star star : starList)
+        {
+            JsonObject genreJson = star.toJson();
+            starJsons.add(genreJson);
+        }
+        return starJsons;
+    }
+
     public Movie addGenre(Genre newGenre)
     {
         genreList.add(newGenre);
+        return this;
+    }
+
+    public Movie addStar(Star newStar)
+    {
+        starList.add(newStar);
         return this;
     }
 }

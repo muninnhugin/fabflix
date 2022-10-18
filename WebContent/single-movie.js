@@ -30,9 +30,8 @@ function handleResult(resultData) {
         "<p>Director: " + resultData["movie_director"] + "</p>" +
         "<p>Rating: " + resultData["movie_rating"] + "</p>");
 
-
-    getGenreJquery(movieInfoElement, resultData["movie_genres"]);
-
+    appendGenreToJquery(movieInfoElement, resultData["movie_genres"]);
+    appendStarsToJquery(movieInfoElement, resultData["movie_stars"]);
 }
 
 

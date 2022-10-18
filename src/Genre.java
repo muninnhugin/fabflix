@@ -15,7 +15,7 @@ public class Genre {
 
     Genre(ResultSet rs) throws SQLException
     {
-        id = rs.getString("id");
+        id = rs.getString("genreId");
         name = rs.getString("name");
     }
 

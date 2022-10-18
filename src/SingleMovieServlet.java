@@ -53,7 +53,7 @@ public class SingleMovieServlet extends HttpServlet {
             // Get a connection from dataSource
 
             // Construct a query with parameter represented by "?"
-            String query = "SELECT * \n" +
+            String query = "SELECT m.id AS movieId, m.title, m.year, m.director, r.rating \n" +
                     "FROM movies m, ratings r\n" +
                     "WHERE m.id = ? AND r.movieId = m.id";
 
@@ -70,19 +70,29 @@ public class SingleMovieServlet extends HttpServlet {
             rs.next();
             Movie movie = new Movie(rs);
 
-            // TODO: refactor this code
+            // get movie genres
             query = "SELECT *\n" +
                     "FROM movies m, genres_in_movies gm, genres g\n" +
                     "WHERE m.id = ? AND m.id = gm.movieId AND gm.genreId = g.id";
             statement = conn.prepareStatement(query);
             statement.setString(1, id);
             rs = statement.executeQuery();
-
-            // TODO: get genres for this movie
-            while(rs.next())
-            {
+            while(rs.next()) {
                 Genre genre = new Genre(rs);
                 movie.addGenre(genre);
+            }
+
+            // get stars information
+            query = "SELECT *" +
+                    "FROM movies m, stars_in_movies sm, stars s \n" +
+                    "WHERE m.id = ? AND m.id = sm.movieId AND sm.starId = s.id";
+            statement = conn.prepareStatement(query);
+            statement.setString(1, id);
+            rs = statement.executeQuery();
+            while(rs.next())
+            {
+                Star star = new Star(rs);
+                movie.addStar(star);
             }
 
             JsonObject movieJson = movie.toJson();

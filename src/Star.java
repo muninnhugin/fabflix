@@ -1,3 +1,8 @@
+import com.google.gson.JsonObject;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Star {
     String id = "";
     String name = "";
@@ -10,7 +15,12 @@ public class Star {
         birthYear = newBirthYear;
     }
 
-    //TODO add constructor that takes ResultSet.next()
+    Star(ResultSet rs) throws SQLException
+    {
+        id = rs.getString("starId");
+        name = rs.getString("name");
+        birthYear = rs.getInt("birthYear");
+    }
 
     String getId() {
         return id;
@@ -21,5 +31,16 @@ public class Star {
     }
 
     int getBirthYear() { return birthYear; }
+
+    public JsonObject toJson()
+    {
+        JsonObject starJson = new JsonObject();
+
+        starJson.addProperty("star_id", id);
+        starJson.addProperty("star_name", name);
+        starJson.addProperty("star_birth_year", birthYear);
+
+        return starJson;
+    }
 
 }
