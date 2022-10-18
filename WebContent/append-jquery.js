@@ -26,9 +26,10 @@ function appendStarsToJquery(jqueryToAppend, starJson, maxStars = Infinity)
     {
         for(let i = 0; i < starsNum; ++i)
         {
-            jqueryToAppend.append("<a class=\"list-group-item\" href=\'single-star.html?id=\'"
-                + starJson[i]["star_id"] + ">"
-                + starJson[i]["star_name"] + "</a>");
+            jqueryToAppend.append("<a class='list-group-item'" +
+                " href='single-star.html?id=" +
+                starJson[i]['star_id'] + "'>" +
+                starJson[i]['star_name'] + "</a>");
         }
     }
     else
