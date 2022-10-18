@@ -1,5 +1,7 @@
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.protobuf.NullValue;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public class Movie {
         title = rs.getString("title");
         year = rs.getInt("year");
         director = rs.getString("director");
-        rating = rs.getDouble("rating");
+        rating = getRatingFromRs(rs);
         genreList = new ArrayList<>();
         starList = new ArrayList<>();
     }
@@ -57,6 +59,29 @@ public class Movie {
 
     public ArrayList<Genre> getGenreList() {
         return genreList;
+    }
+
+    public Movie addGenre(Genre newGenre)
+    {
+        genreList.add(newGenre);
+        return this;
+    }
+
+    public Movie addStar(Star newStar)
+    {
+        starList.add(newStar);
+        return this;
+    }
+
+    public double getRatingFromRs(ResultSet rs)
+    {
+        double rating;
+        try{
+            rating = rs.getDouble("rating");
+        } catch (SQLException sqlex){
+            rating = -1;
+        }
+        return rating;
     }
 
     public JsonObject toJson() {
@@ -91,17 +116,5 @@ public class Movie {
             starJsons.add(genreJson);
         }
         return starJsons;
-    }
-
-    public Movie addGenre(Genre newGenre)
-    {
-        genreList.add(newGenre);
-        return this;
-    }
-
-    public Movie addStar(Star newStar)
-    {
-        starList.add(newStar);
-        return this;
     }
 }
