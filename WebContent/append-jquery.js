@@ -47,8 +47,8 @@ function appendMoviesToTable(jQueryToAppend, movieJsons, maxMovies = Infinity)
         let rowHTML = "";
         rowHTML += "<tr>";
         rowHTML += "<th>" +
-            "<a href='single-movie.html?id='" +
-            movieJsons[i]['movie_id'] + ">" +
+            "<a href='single-movie.html?id=" +
+            movieJsons[i]['movie_id'] + "'>" +
             movieJsons[i]["movie_title"] +
             "</a>" +
             "</th>";
