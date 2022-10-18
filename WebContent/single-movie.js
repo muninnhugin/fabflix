@@ -25,10 +25,27 @@ function handleResult(resultData) {
 
     let movieInfoElement = jQuery("#movie_info");
 
-    movieInfoElement.append("<p>Movie Title: " + resultData["movie_title"] + "</p>" +
+    movieInfoElement.append("<p>Title: " + resultData["movie_title"] + "</p>" +
         "<p>Year: " + resultData["movie_year"] + "</p>" +
         "<p>Director: " + resultData["movie_director"] + "</p>" +
         "<p>Rating: " + resultData["movie_rating"] + "</p>");
+
+
+    movieInfoElement.append("<p>Genres:</p>" + "<div class=\"list-group\">");
+    let genresNum = Math.min(3, resultData["movie_genres"].length);
+    if(genresNum != 0)
+    {
+        for(let i = 0; i < genresNum; ++i)
+        {
+            movieInfoElement.append("<a class=\"list-group-item\"" + ">" + resultData["movie_genres"][i]["genre_name"] + "</a>");
+        }
+    }
+    else
+    {
+        movieInfoElement.append("<a>None</a>")
+    }
+    movieInfoElement.append("</div>");
+
 }
 
 let movieId = getParameterByName('id');
