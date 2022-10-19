@@ -38,7 +38,7 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        JsonObject responseJsonObject = new JsonObject();
+        LoginResponse loginResponse = new LoginResponse();
         try (Connection conn = dataSource.getConnection()) {
             // Get a connection from dataSource
 
@@ -54,23 +54,20 @@ public class LoginServlet extends HttpServlet {
             {
                 request.getSession().setAttribute("user", new User(username));
 
-                responseJsonObject.addProperty("status", "success");
-                responseJsonObject.addProperty("message", "success");
+                loginResponse.setLoginSuccess("success");
             }
             else
             {
                 // Login fail
-                responseJsonObject.addProperty("status", "fail");
+                loginResponse.setLoginFail("incorrect login information");
                 // Log to localhost log
                 request.getServletContext().log("Login failed");
-                // sample error messages. in practice, it is not a good idea to tell user which one is incorrect/not exist.
-                responseJsonObject.addProperty("message", "incorrect login information");
             }
 
             rs.close();
             statement.close();
 
-            out.write(responseJsonObject.toString());
+            out.write(loginResponse.toJson().toString());
 
             // Set response status to 200 (OK)
             response.setStatus(200);
