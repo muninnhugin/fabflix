@@ -13,6 +13,9 @@
  * Handles the data returned by the API, read the jsonObject and populate data into html elements
  * @param resultData jsonObject
  */
+
+// TODO make faster
+
 function handleMovieResult(resultData) {
     console.log("handleStarResult: populating movie table from resultData");
 
@@ -27,15 +30,30 @@ function handleMovieResult(resultData) {
         let rowHTML = "";
         rowHTML += "<tr>";
         rowHTML +=
-            "<th>" +
+            "<td>" +
             // Add a link to single-star.html with id passed with GET url parameter
             '<a href="single-movie.html?id=' + resultData[i]['movie_id'] + '">'
             + resultData[i]["movie_title"] +     // display star_name for the link text
             '</a>' +
-            "</th>";
-        rowHTML += "<th>" + resultData[i]["movie_year"] + "</th>";
-        rowHTML += "<th>" + resultData[i]["movie_director"] + "</th>";
-        rowHTML += "<th>" + resultData[i]["movie_rating"] + "</th>";
+            "</td>";
+        rowHTML += "<td>" + resultData[i]["movie_year"] + "</td>";
+        rowHTML += "<td>" + resultData[i]["movie_director"] + "</td>";
+        rowHTML += "<td>" + resultData[i]["movie_rating"] + "</td>";
+        rowHTML += "<td><ul>";
+        let genreNum = Math.min(3, resultData[i]["movie_genres"].length);
+        for(let j = 0; j < genreNum; ++j)
+        {
+            rowHTML += "<li" + "> " + resultData[i]["movie_genres"][j]["genre_name"] + " </li>";
+        }
+        rowHTML += "</ul></td>";
+        rowHTML += "<td><ul>";
+        let starNum = Math.min(3, resultData[i]["movie_stars"].length);
+        for(let j = 0; j < starNum; ++j)
+        {
+            rowHTML += "<li><a href='single-star.html?id=" + resultData[i]["movie_stars"][j]["star_id"] + "'> " +
+                resultData[i]["movie_stars"][j]["star_name"] + " </a></li>";
+        }
+        rowHTML += "</ul></td>";
         rowHTML += "</tr>";
 
         // Append the row created to the table body, which will refresh the page
