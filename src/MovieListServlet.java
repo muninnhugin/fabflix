@@ -59,6 +59,7 @@ public class MovieListServlet extends HttpServlet {
                 Movie movie = new Movie(rs);
 
                 // add genre information
+                /*
                 query = "SELECT *\n" +
                         "FROM movies m, genres_in_movies gm, genres g\n" +
                         "WHERE m.id = '" + movie.getId() + "'AND m.id = gm.movieId AND gm.genreId = g.id";
@@ -70,21 +71,12 @@ public class MovieListServlet extends HttpServlet {
                     Genre genre = new Genre(subRs);
                     movie.addGenre(genre);
                 }
+                */
+                getGenres(movie);
+                getStars(movie);
 
                 // add star info
-                query = "SELECT *" +
-                        "FROM movies m, stars_in_movies sm, stars s \n" +
-                        "WHERE m.id = '" + movie.getId() + "' AND m.id = sm.movieId AND sm.starId = s.id";
-                subStatement = conn.createStatement();
-                subRs = subStatement.executeQuery(query);
-                while(subRs.next())
-                {
-                    Star star = new Star(subRs);
-                    movie.addStar(star);
-                }
 
-                subStatement.close();
-                subRs.close();
 
                 JsonObject movieJson = movie.toJson();
                 movieJsons.add(movieJson);
@@ -121,16 +113,38 @@ public class MovieListServlet extends HttpServlet {
     {
         String query = "SELECT *\n" +
                 "FROM movies m, genres_in_movies gm, genres g\n" +
-                "WHERE m.id = ? AND m.id = gm.movieId AND gm.genreId = g.id";
+                "WHERE m.id = '" + movie.getId() + "'AND m.id = gm.movieId AND gm.genreId = g.id";
 
         Connection conn = dataSource.getConnection();
-        PreparedStatement statement = conn.prepareStatement(query);
-        statement.setString(1, movie.getId());
-        ResultSet rs = statement.executeQuery();
+        Statement statement = conn.createStatement();
+        ResultSet rs = statement.executeQuery(query);
 
         while(rs.next()) {
             Genre genre = new Genre(rs);
             movie.addGenre(genre);
+        }
+
+        conn.close();
+        statement.close();
+        rs.close();
+
+        return movie;
+    }
+
+    private Movie getStars(Movie movie) throws SQLException
+    {
+        String query = "SELECT *" +
+                "FROM movies m, stars_in_movies sm, stars s \n" +
+                "WHERE m.id = '" + movie.getId() + "' AND m.id = sm.movieId AND sm.starId = s.id";
+
+        Connection conn = dataSource.getConnection();
+        Statement statement = conn.createStatement();
+        ResultSet rs = statement.executeQuery(query);
+
+        while(rs.next())
+        {
+            Star star = new Star(rs);
+            movie.addStar(star);
         }
 
         conn.close();
