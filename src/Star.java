@@ -19,6 +19,7 @@ public class Star {
         movieList = new ArrayList<>();
     }
 
+    // TODO add code to check null values (SQL is null)
     Star(ResultSet rs) throws SQLException
     {
         id = rs.getString("starId");
