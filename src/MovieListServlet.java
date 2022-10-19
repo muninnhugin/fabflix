@@ -71,7 +71,7 @@ public class MovieListServlet extends HttpServlet {
                     movie.addGenre(genre);
                 }
 
-                // TODO add genre and star info to movie
+                // add star infoz
                 query = "SELECT *" +
                         "FROM movies m, stars_in_movies sm, stars s \n" +
                         "WHERE m.id = '" + movie.getId() + "' AND m.id = sm.movieId AND sm.starId = s.id";
