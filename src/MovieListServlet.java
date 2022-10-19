@@ -10,9 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 
 // Declaring a WebServlet called StarsServlet, which maps to url "/api/stars"
@@ -44,7 +42,6 @@ public class MovieListServlet extends HttpServlet {
         // Get a connection from dataSource and let resource manager close the connection after usage.
         try (Connection conn = dataSource.getConnection()) {
 
-            // Declare our statement
             Statement statement = conn.createStatement();
 
             String query = "SELECT m.id AS movieId, m.title, m.year, m.director, r.rating\n" +
@@ -60,6 +57,35 @@ public class MovieListServlet extends HttpServlet {
             // Iterate through each row of rs
             while (rs.next()) {
                 Movie movie = new Movie(rs);
+
+                // add genre information
+                query = "SELECT *\n" +
+                        "FROM movies m, genres_in_movies gm, genres g\n" +
+                        "WHERE m.id = '" + movie.getId() + "'AND m.id = gm.movieId AND gm.genreId = g.id";
+
+                Statement subStatement = conn.createStatement();
+                ResultSet subRs = subStatement.executeQuery(query);
+
+                while(subRs.next()) {
+                    Genre genre = new Genre(subRs);
+                    movie.addGenre(genre);
+                }
+
+                // TODO add genre and star info to movie
+                query = "SELECT *" +
+                        "FROM movies m, stars_in_movies sm, stars s \n" +
+                        "WHERE m.id = '" + movie.getId() + "' AND m.id = sm.movieId AND sm.starId = s.id";
+                subStatement = conn.createStatement();
+                subRs = subStatement.executeQuery(query);
+                while(subRs.next())
+                {
+                    Star star = new Star(subRs);
+                    movie.addStar(star);
+                }
+
+                subStatement.close();
+                subRs.close();
+
                 JsonObject movieJson = movie.toJson();
                 movieJsons.add(movieJson);
             }
@@ -89,5 +115,28 @@ public class MovieListServlet extends HttpServlet {
 
         // Always remember to close db connection after usage. Here it's done by try-with-resources
 
+    }
+
+    private Movie getGenres(Movie movie) throws SQLException
+    {
+        String query = "SELECT *\n" +
+                "FROM movies m, genres_in_movies gm, genres g\n" +
+                "WHERE m.id = ? AND m.id = gm.movieId AND gm.genreId = g.id";
+
+        Connection conn = dataSource.getConnection();
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setString(1, movie.getId());
+        ResultSet rs = statement.executeQuery();
+
+        while(rs.next()) {
+            Genre genre = new Genre(rs);
+            movie.addGenre(genre);
+        }
+
+        conn.close();
+        statement.close();
+        rs.close();
+
+        return movie;
     }
 }
