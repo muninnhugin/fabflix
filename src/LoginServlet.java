@@ -45,21 +45,30 @@ public class LoginServlet extends HttpServlet {
             // Construct a query with parameter represented by "?"
             String query = "SELECT * \n" +
                     "FROM customers c \n" +
-                    "WHERE c.email = '" + username + "' AND c.password = '" + password + "'";
+                    "WHERE c.email = '" + username + "'";
 
             Statement statement = conn.createStatement();
             ResultSet rs = statement.executeQuery(query);
 
             if(rs.next())
             {
-                request.getSession().setAttribute("user", new User(username));
-
-                loginResponse.setLoginSuccess("success");
+                String correctPassword = rs.getString("password");
+                if(!password.equals(correctPassword))
+                {
+                    // Login fail
+                    loginResponse.setLoginFail("incorrect login password");
+                    // Log to localhost log
+                    request.getServletContext().log("Login failed");
+                }
+                else {
+                    request.getSession().setAttribute("user", new User(username));
+                    loginResponse.setLoginSuccess("success");
+                }
             }
             else
             {
                 // Login fail
-                loginResponse.setLoginFail("incorrect login information");
+                loginResponse.setLoginFail("incorrect login username");
                 // Log to localhost log
                 request.getServletContext().log("Login failed");
             }
