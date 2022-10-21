@@ -1,13 +1,4 @@
-/**
- * This example is following frontend and backend separation.
- *
- * Before this .js is loaded, the html skeleton is created.
- *
- * This .js performs two steps:
- *      1. Use jQuery to talk to backend API to get the json data.
- *      2. Populate the data to correct html elements.
- */
-
+let search_form = jQuery("#search_form");
 
 /**
  * Handles the data returned by the API, read the jsonObject and populate data into html elements
@@ -17,13 +8,10 @@
 // TODO make faster
 
 function handleMovieResult(resultData) {
-    console.log("handleStarResult: populating movie table from resultData");
+    console.log("handleMovieResult: populating movie table from resultData");
 
-    // Populate the star table
-    // Find the empty table body by id "star_table_body"
     let movieTableBodyElement = jQuery("#movie_table_body");
 
-    // Iterate through resultData, no more than 10 entries
     for (let i = 0; i < Math.min(20, resultData.length); i++) {
 
         // Concatenate the html tags with resultData jsonObject
@@ -31,9 +19,8 @@ function handleMovieResult(resultData) {
         rowHTML += "<tr>";
         rowHTML +=
             "<td>" +
-            // Add a link to single-star.html with id passed with GET url parameter
             '<a href="single-movie.html?id=' + resultData[i]['movie_id'] + '">'
-            + resultData[i]["movie_title"] +     // display star_name for the link text
+            + resultData[i]["movie_title"] +
             '</a>' +
             "</td>";
         rowHTML += "<td>" + resultData[i]["movie_year"] + "</td>";
@@ -61,15 +48,17 @@ function handleMovieResult(resultData) {
     }
 }
 
+function handleSearchSubmit(searchEvent)
+{
+    console.log("handling search submit");
+    searchEvent.preventDefault();
+    jQuery.ajax({
+        dataType: "json", // Setting return data type
+        method: "GET", // Setting request method
+        url: "api/movie-list", // Setting request url, which is mapped by MovieListServlet in MovieListServlet.java
+        data: search_form.serialize(),
+        success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
+    });
+}
 
-/**
- * Once this .js is loaded, following scripts will be executed by the browser
- */
-
-// Makes the HTTP GET request and registers on success callback function handleStarResult
-jQuery.ajax({
-    dataType: "json", // Setting return data type
-    method: "GET", // Setting request method
-    url: "api/movie-list", // Setting request url, which is mapped by MovieListServlet in MovieListServlet.java
-    success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
-});
+search_form.submit(handleSearchSubmit);

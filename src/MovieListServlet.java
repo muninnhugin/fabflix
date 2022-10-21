@@ -44,11 +44,7 @@ public class MovieListServlet extends HttpServlet {
 
             Statement statement = conn.createStatement();
 
-            String query = "SELECT m.id AS movieId, m.title, m.year, m.director, r.rating\n" +
-                    "FROM movies AS m, ratings AS r\n" +
-                    "WHERE m.id = r.movieId \n" +
-                    "ORDER BY r.rating DESC \n" +
-                    "LIMIT 20";
+            String query = retrieveQuery(request);
 
             // Perform the query
             ResultSet rs = statement.executeQuery(query);
@@ -135,5 +131,26 @@ public class MovieListServlet extends HttpServlet {
         rs.close();
 
         return movie;
+    }
+
+    private String retrieveQuery(HttpServletRequest request)
+    {
+        String selectClause = "SELECT * ";
+        String fromClause = "FROM movies m, ratings r ";
+        String whereClause = "WHERE m.id = r.movieId ";
+        String limitClause = "LIMIT 20";
+
+        String title = request.getParameter("title");
+        if(isValid(title))
+        {
+            whereClause += "AND m.title ='" + title + "'";
+        }
+
+        return selectClause + fromClause + whereClause + limitClause;
+    }
+
+    private boolean isValid(String param)
+    {
+        return !param.isEmpty() && !param.isBlank();
     }
 }
