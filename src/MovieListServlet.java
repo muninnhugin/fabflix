@@ -58,26 +58,8 @@ public class MovieListServlet extends HttpServlet {
             // Iterate through each row of rs
             while (rs.next()) {
                 Movie movie = new Movie(rs);
-
-                // add genre information
-                /*
-                query = "SELECT *\n" +
-                        "FROM movies m, genres_in_movies gm, genres g\n" +
-                        "WHERE m.id = '" + movie.getId() + "'AND m.id = gm.movieId AND gm.genreId = g.id";
-
-                Statement subStatement = conn.createStatement();
-                ResultSet subRs = subStatement.executeQuery(query);
-
-                while(subRs.next()) {
-                    Genre genre = new Genre(subRs);
-                    movie.addGenre(genre);
-                }
-                */
                 getGenres(movie);
                 getStars(movie);
-
-                // add star info
-
 
                 JsonObject movieJson = movie.toJson();
                 movieJsons.add(movieJson);
