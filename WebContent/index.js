@@ -29,8 +29,20 @@ function populateTitleBrowseList()
 {
     let title_browse_list = jQuery("#title_browse_list");
 
+    // populate with numbers and special characters
+    let title_html = '<div class="special_character_titles">' +
+        '<a href="movie-list.html?title=*">*</a></div>';
+    title_html += '<div id="number_titles" class="browse_list">';
+    for(let i = 0; i < 10; ++i)
+    {
+        title_html += '<div class="number_title"><a href="movie-list.html?title=' +
+            i + '">' + i + '</a></div>';
+    }
+    title_html += '</div>';
+    title_browse_list.append(title_html);
+
     // populate with characters
-    let title_html = '<div id="character_titles" class="browse_list">';
+    title_html = '<div id="character_titles" class="browse_list">';
     for(let i = 0; i < NUM_OF_ALPHABET_LETTERS; ++i)
     {
         let letter = String.fromCharCode(65 + i);
@@ -39,19 +51,6 @@ function populateTitleBrowseList()
     }
     title_html += '</div>';
     title_browse_list.append(title_html);
-
-    // populate with numbers and special characters
-    title_html = '<div id="number_titles" class="browse_list">';
-    for(let i = 0; i < 10; ++i)
-    {
-        title_html += '<div class="number_title"><a href="movie-list.html?title=' +
-            i + '">' + i + '</a></div>';
-    }
-    title_html += '</div>';
-    title_html += '<div class="special_character_titles">' +
-        '<a href="movie-list.html?title=*">*</a></div>';
-    title_browse_list.append(title_html);
-
 }
 
 search_form.submit(handleSearchSubmit);
