@@ -144,6 +144,7 @@ public class MovieListServlet extends HttpServlet {
         String year = request.getParameter("year");
         String director = request.getParameter("director");
         String starName = request.getParameter("star-name");
+        String genreId = request.getParameter("genre_id");
 
         if(isValid(title))
         {
@@ -162,6 +163,12 @@ public class MovieListServlet extends HttpServlet {
             fromClause += ", stars_in_movies sm, stars s";
             whereClause +=  " AND m.id = sm.movieId AND sm.starId = s.id " +
                             " AND s.name LIKE '" + like(starName) + "'";
+        }
+        if(isValid(genreId))
+        {
+            fromClause += ", genres_in_movies gm, genres g";
+            whereClause +=  " AND m.id = gm.movieId AND gm.genreId = g.id " +
+                    " AND g.id = " + genreId;
         }
 
         String query =  selectClause + "\n" +
