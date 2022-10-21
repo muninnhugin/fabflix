@@ -1,0 +1,8 @@
+#genre_browse_form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    column-gap: 10px;
+    max-width: 900px;
+}
