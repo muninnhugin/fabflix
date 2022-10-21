@@ -47,7 +47,8 @@ public class MovieListServlet extends HttpServlet {
             String query = "SELECT m.id AS movieId, m.title, m.year, m.director, r.rating\n" +
                     "FROM movies AS m, ratings AS r\n" +
                     "WHERE m.id = r.movieId \n" +
-                    "ORDER BY r.rating DESC";
+                    "ORDER BY r.rating DESC \n" +
+                    "LIMIT 20";
 
             // Perform the query
             ResultSet rs = statement.executeQuery(query);
