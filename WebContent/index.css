@@ -1,4 +1,4 @@
-#genre_browse_list {
+.browse_list {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -6,3 +6,12 @@
     column-gap: 10px;
     max-width: 900px;
 }
+
+#genre_browse_list {
+
+}
+
+#title_browse_list {
+
+}
+

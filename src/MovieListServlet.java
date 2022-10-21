@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.sql.*;
 
 
@@ -133,8 +134,7 @@ public class MovieListServlet extends HttpServlet {
         return movie;
     }
 
-    private String retrieveQuery(HttpServletRequest request)
-    {
+    private String retrieveQuery(HttpServletRequest request) throws UnsupportedEncodingException {
         String selectClause = "SELECT * ";
         String fromClause = "FROM movies m, ratings r ";
         String whereClause = "WHERE m.id = r.movieId ";
@@ -148,7 +148,8 @@ public class MovieListServlet extends HttpServlet {
 
         if(isValid(title))
         {
-            whereClause += " AND m.title LIKE '" + like(title) + "'";
+            if(!title.equals("*")) {  whereClause += " AND m.title LIKE '" + like(title) + "'";}
+            else {  whereClause += " AND m.title REGEXP '^[^A-Z0-9]' ";  }
         }
         if(isValid(year))
         {
@@ -186,6 +187,6 @@ public class MovieListServlet extends HttpServlet {
 
     private String like(String param)
     {
-        return "%" + param + "%";
+        return param + "%";
     }
 }

@@ -1,14 +1,16 @@
+
 function getURLParameter(name) {
-    return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null
+    let urlParams = new URLSearchParams(location.search);
+    return urlParams.get(name);
 }
 
 function getUrlParameterFromLink()
 {
     return {    title: getURLParameter("title"),
-                year: getURLParameter("year"),
-                director: getURLParameter("director"),
-                star_name: getURLParameter("star_name"),
-                genre_id: getURLParameter("genre_id")
+        year: getURLParameter("year"),
+        director: getURLParameter("director"),
+        star_name: getURLParameter("star_name"),
+        genre_id: getURLParameter("genre_id")
     };
 }
 
