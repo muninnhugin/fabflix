@@ -141,16 +141,44 @@ public class MovieListServlet extends HttpServlet {
         String limitClause = "LIMIT 20";
 
         String title = request.getParameter("title");
+        String year = request.getParameter("year");
+        String director = request.getParameter("director");
+        String starName = request.getParameter("star-name");
+
         if(isValid(title))
         {
-            whereClause += "AND m.title ='" + title + "'";
+            whereClause += "AND m.title LIKE '" + like(title) + "'";
+        }
+        if(isValid(year))
+        {
+            whereClause += " AND m.year = " + year;
+        }
+        if(isValid(director))
+        {
+            whereClause += "AND m.director LIKE '" + like(director) + "'";
+        }
+        if(isValid(starName))
+        {
+            fromClause += ", stars_in_movies sm, stars s";
+            whereClause +=  " AND m.id = sm.movieId AND sm.starId = s.id " +
+                            " AND s.name LIKE '" + like(starName) + "'";
         }
 
-        return selectClause + fromClause + whereClause + limitClause;
+        String query =  selectClause + "\n" +
+                        fromClause + "\n" +
+                        whereClause + "\n" +
+                        limitClause;
+
+        return query;
     }
 
     private boolean isValid(String param)
     {
-        return !param.isEmpty() && !param.isBlank();
+        return param != null && !param.isEmpty();
+    }
+
+    private String like(String param)
+    {
+        return "%" + param + "%";
     }
 }
