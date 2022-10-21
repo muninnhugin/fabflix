@@ -93,7 +93,8 @@ public class MovieListServlet extends HttpServlet {
     {
         String query = "SELECT *\n" +
                 "FROM movies m, genres_in_movies gm, genres g\n" +
-                "WHERE m.id = '" + movie.getId() + "'AND m.id = gm.movieId AND gm.genreId = g.id";
+                "WHERE m.id = '" + movie.getId() + "'AND m.id = gm.movieId AND gm.genreId = g.id\n" +
+                "ORDER BY g.name ASC";
 
         Connection conn = dataSource.getConnection();
         Statement statement = conn.createStatement();
