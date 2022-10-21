@@ -1,4 +1,5 @@
 let search_form = jQuery("#search_form");
+let movieTableBodyElement = jQuery("#movie_table_body");
 
 /**
  * Handles the data returned by the API, read the jsonObject and populate data into html elements
@@ -9,8 +10,6 @@ let search_form = jQuery("#search_form");
 
 function handleMovieResult(resultData) {
     console.log("handleMovieResult: populating movie table from resultData");
-
-    let movieTableBodyElement = jQuery("#movie_table_body");
 
     for (let i = 0; i < Math.min(20, resultData.length); i++) {
 
@@ -52,6 +51,7 @@ function handleSearchSubmit(searchEvent)
 {
     console.log("handling search submit");
     searchEvent.preventDefault();
+    movieTableBodyElement.empty();
     jQuery.ajax({
         dataType: "json", // Setting return data type
         method: "GET", // Setting request method

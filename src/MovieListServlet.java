@@ -147,7 +147,7 @@ public class MovieListServlet extends HttpServlet {
 
         if(isValid(title))
         {
-            whereClause += "AND m.title LIKE '" + like(title) + "'";
+            whereClause += " AND m.title LIKE '" + like(title) + "'";
         }
         if(isValid(year))
         {
@@ -155,7 +155,7 @@ public class MovieListServlet extends HttpServlet {
         }
         if(isValid(director))
         {
-            whereClause += "AND m.director LIKE '" + like(director) + "'";
+            whereClause += " AND m.director LIKE '" + like(director) + "'";
         }
         if(isValid(starName))
         {
