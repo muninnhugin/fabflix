@@ -1,0 +1,49 @@
+<!-- This example is following frontend and backend separation.
+
+    This .html performs two steps:
+    1. Create a html template skeleton, with all the elements defined (some left empty) and named with ids.
+    2. Load movie-list.js to populate the data into empty elements.
+    -->
+
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="movie-list.css">
+
+    <title>Fabflix</title>
+</head>
+<body>
+
+<form id="search_form" method="get" action="#">
+    <label>
+        <input name="title" placeholder="Enter movie title" type="text">
+    </label>
+    <label>
+        <input name="year" placeholder="Enter movie year" type="text">
+    </label>
+    <label>
+        <input name="director" placeholder="Enter director name" type="text">
+    </label>
+    <label>
+        <input name="star_name" placeholder="Enter star name" type="text">
+    </label>
+    <input type="submit" value="Search">
+</form>
+
+<!-- Load jQuery and Bootstrap JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<script src="index.js"></script>
+
+</body>
+</html>

@@ -1,20 +1,15 @@
-let search_form = jQuery("#search_form");
-let movieTableBodyElement = jQuery("#movie_table_body");
-let genre_form = jQuery("#genre_browse_form");
+function getURLParameter(name) {
+    return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null
+}
 
-// TODO handle genre browse submit event
-function handleGenreBrowseSubmit(genreBrowseEvent)
+function getUrlParameterFromLink()
 {
-    console.log("handling genre browse submit");
-    genreBrowseEvent.preventDefault();
-    movieTableBodyElement.empty();
-    jQuery.ajax({
-        dataType: "json", // Setting return data type
-        method: "GET", // Setting request method
-        url: "api/movie-list", // Setting request url, which is mapped by MovieListServlet in MovieListServlet.java
-        data: genre_form.serialize(),
-        success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
-    });
+    return {    title: getURLParameter("title"),
+                year: getURLParameter("year"),
+                director: getURLParameter("director"),
+                star_name: getURLParameter("star_name"),
+                genre_id: getURLParameter("genre_id")
+    };
 }
 
 /**
@@ -23,6 +18,9 @@ function handleGenreBrowseSubmit(genreBrowseEvent)
  */
 function handleMovieResult(resultData) {
     console.log("handleMovieResult: populating movie table from resultData");
+
+    let movieTableBodyElement = jQuery("#movie_table_body");
+    movieTableBodyElement.empty();
 
     for (let i = 0; i < Math.min(20, resultData.length); i++) {
 
@@ -60,39 +58,13 @@ function handleMovieResult(resultData) {
     }
 }
 
-function handleSearchSubmit(searchEvent)
-{
-    console.log("handling search submit");
-    searchEvent.preventDefault();
-    movieTableBodyElement.empty();
-    jQuery.ajax({
-        dataType: "json", // Setting return data type
-        method: "GET", // Setting request method
-        url: "api/movie-list", // Setting request url, which is mapped by MovieListServlet in MovieListServlet.java
-        data: search_form.serialize(),
-        success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
-    });
-}
-// TODO populate genre form with data from BrowseListServlet
-function populateGenreBrowseForm(genreListData)
-{
-    for(let i = 0; i < genreListData.length; ++i)
-    {
-        let genre_id = genreListData[i]["genre_id"];
-        let genre_name = genreListData[i]["genre_name"];
-        let genreHtml = "<label><input type='radio' name='genre_id' value='" +
-                        genre_id + "'>" + genre_name + "</label><br>";
-        genre_form.append(genreHtml);
-    }
-    genre_form.append("<input type='submit' value='Browse'>");
-}
-
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
-    url: "api/browse-list", // Setting request url, which is mapped by MovieListServlet in MovieListServlet.java
-    success: (genreListData) => populateGenreBrowseForm(genreListData) // Setting callback function to handle data returned successfully by the StarsServlet
+    url: "api/movie-list", // Setting request url, which is mapped by MovieListServlet in MovieListServlet.java
+    data: getUrlParameterFromLink(),
+    success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
 });
 
-search_form.submit(handleSearchSubmit);
-genre_form.submit(handleGenreBrowseSubmit);
+
+

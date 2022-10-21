@@ -143,7 +143,7 @@ public class MovieListServlet extends HttpServlet {
         String title = request.getParameter("title");
         String year = request.getParameter("year");
         String director = request.getParameter("director");
-        String starName = request.getParameter("star-name");
+        String starName = request.getParameter("star_name");
         String genreId = request.getParameter("genre_id");
 
         if(isValid(title))
