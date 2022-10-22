@@ -1,3 +1,7 @@
+function appendComma(i, length, html)
+{
+    if(i != 1 && i != length)   html += ", ";
+}
 
 function getURLParameter(name) {
     let urlParams = new URLSearchParams(location.search);
@@ -38,19 +42,21 @@ function handleMovieResult(resultData) {
         rowHTML += "<td>" + resultData[i]["movie_year"] + "</td>";
         rowHTML += "<td>" + resultData[i]["movie_director"] + "</td>";
         rowHTML += "<td>" + resultData[i]["movie_rating"] + "</td>";
-        rowHTML += "<td><ul>";
+        rowHTML += "<td><ul id='genre_list'>";
         let genreNum = Math.min(3, resultData[i]["movie_genres"].length);
         for(let j = 0; j < genreNum; ++j)
         {
-            rowHTML += "<li" + "> " + resultData[i]["movie_genres"][j]["genre_name"] + " </li>";
+            let genre_id = resultData[i]["movie_genres"][j]["genre_id"];
+            let genre_name = resultData[i]["movie_genres"][j]["genre_name"];
+            rowHTML += "<li><a href='movie-list.html?genre_id=" + genre_id + "'>" + genre_name + " </a></li>";
         }
         rowHTML += "</ul></td>";
-        rowHTML += "<td><ul>";
+        rowHTML += "<td><ul id='star_list'>";
         let starNum = Math.min(3, resultData[i]["movie_stars"].length);
         for(let j = 0; j < starNum; ++j)
         {
             rowHTML += "<li><a href='single-star.html?id=" + resultData[i]["movie_stars"][j]["star_id"] + "'> " +
-                resultData[i]["movie_stars"][j]["star_name"] + " </a></li>";
+                resultData[i]["movie_stars"][j]["star_name"] + "</a></li>";
         }
         rowHTML += "</ul></td>";
         rowHTML += "</tr>";
