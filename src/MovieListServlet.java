@@ -145,7 +145,8 @@ public class MovieListServlet extends HttpServlet {
         String fromClause = "FROM movies m, ratings r ";
         String whereClause = "WHERE m.id = r.movieId ";
         String orderByClause = "ORDER BY ";
-        String limitClause = "LIMIT 20";
+        String limitClause = "LIMIT ";
+        String offsetClause = " OFFSET ";
 
         String title = request.getParameter("title");
         String year = request.getParameter("year");
@@ -156,6 +157,8 @@ public class MovieListServlet extends HttpServlet {
         String orderBy = request.getParameter("order_by");
         String titleOrder = request.getParameter("title_order");
         String ratingOrder = request.getParameter("rating_order");
+        String recordsPerPage = request.getParameter("records_per_page");
+        String pageNumber = request.getParameter("page_number");
 
         if(isValid(title))
         {
@@ -182,6 +185,22 @@ public class MovieListServlet extends HttpServlet {
             whereClause +=  " AND m.id = gm.movieId AND gm.genreId = g.id " +
                     " AND g.id = " + genreId;
         }
+        if(!isValid(recordsPerPage))
+        {
+            limitClause += " 25 ";
+        }
+        else
+        {
+            limitClause += recordsPerPage;
+        }
+        if(!isValid(pageNumber))
+        {
+            offsetClause += " 0 ";
+        }
+        else
+        {
+            offsetClause += getOffset(recordsPerPage, pageNumber);
+        }
 
         orderByClause += getOrderByArgs(orderBy, titleOrder, ratingOrder);
 
@@ -189,7 +208,8 @@ public class MovieListServlet extends HttpServlet {
                         fromClause + "\n" +
                         whereClause + "\n" +
                         orderByClause + "\n" +
-                        limitClause;
+                        limitClause + "\n" +
+                        offsetClause;
 
         return query;
     }
@@ -247,5 +267,13 @@ public class MovieListServlet extends HttpServlet {
         }
 
         return args;
+    }
+    private String getOffset(String recordsPerPageString, String pageNumberString)
+    {
+        int recordsPerPage = Integer.parseInt(recordsPerPageString);
+        int pageNumber = Integer.parseInt(pageNumberString);
+        int offset = recordsPerPage * pageNumber;
+
+        return Integer.toString(offset);
     }
 }

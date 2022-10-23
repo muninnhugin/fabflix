@@ -1,4 +1,4 @@
-let order_by_form = jQuery("#order_by_form");
+let sort_form = jQuery("#sort_form");
 
 function getURLParameter(name) {
     let urlParams = new URLSearchParams(location.search);
@@ -25,7 +25,7 @@ function handleMovieResult(resultData) {
     let movieTableBodyElement = jQuery("#movie_table_body");
     movieTableBodyElement.empty();
 
-    for (let i = 0; i < Math.min(20, resultData.length); i++) {
+    for (let i = 0; i < resultData.length; i++) {
 
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "";
@@ -70,6 +70,7 @@ function sortRequest(sortEvent)
     let order_by = jQuery("#order_by").val();
     let rating_order = jQuery("#rating_order").val();
     let title_order = jQuery("#title_order").val();
+    let records_per_page = jQuery("#records_per_page").val();
     jQuery.ajax({
         dataType: "json", // Setting return data type
         method: "GET", // Setting request method
@@ -81,7 +82,8 @@ function sortRequest(sortEvent)
             genre_id: getURLParameter("genre_id"),
             order_by: order_by,
             rating_order: rating_order,
-            title_order: title_order
+            title_order: title_order,
+            records_per_page: records_per_page
         },
         success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
     });
@@ -95,5 +97,5 @@ jQuery.ajax({
     success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
 });
 
-order_by_form.submit(sortRequest);
+sort_form.submit(sortRequest);
 
