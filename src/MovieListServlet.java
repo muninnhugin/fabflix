@@ -140,6 +140,7 @@ public class MovieListServlet extends HttpServlet {
         return movie;
     }
 
+    // TODO refactor this function
     private String retrieveQuery(HttpServletRequest request) {
         String selectClause = "SELECT * ";
         String fromClause = "FROM movies m, ratings r ";
@@ -193,14 +194,8 @@ public class MovieListServlet extends HttpServlet {
         {
             limitClause += recordsPerPage;
         }
-        if(!isValid(pageNumber))
-        {
-            offsetClause += " 0 ";
-        }
-        else
-        {
-            offsetClause += getOffset(recordsPerPage, pageNumber);
-        }
+
+        offsetClause += getOffset(recordsPerPage, pageNumber);
 
         orderByClause += getOrderByArgs(orderBy, titleOrder, ratingOrder);
 
@@ -270,8 +265,18 @@ public class MovieListServlet extends HttpServlet {
     }
     private String getOffset(String recordsPerPageString, String pageNumberString)
     {
-        int recordsPerPage = Integer.parseInt(recordsPerPageString);
-        int pageNumber = Integer.parseInt(pageNumberString);
+        int recordsPerPage = 25;
+        int pageNumber = 0;
+
+        if(isValid(recordsPerPageString))
+        {
+            recordsPerPage = Integer.parseInt(recordsPerPageString);
+        }
+        if(isValid(pageNumberString))
+        {
+            pageNumber = Integer.parseInt(pageNumberString);
+        }
+
         int offset = recordsPerPage * pageNumber;
 
         return Integer.toString(offset);

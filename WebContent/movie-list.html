@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="site.css">
+    <link rel="stylesheet" href="movie-list.css">
 
     <title>Movie List</title>
 </head>
@@ -50,6 +51,7 @@
     records per page
     <input type="submit" value="Sort">
 </form>
+
 <!-- Id "movie_table" is useful for jQuery to find the html element with id, class here is mapping to Bootstrap defined class CSS -->
 <table id="movie_table" class="table table-striped">
     <!-- Create a table header -->
@@ -68,6 +70,11 @@
     <!-- Again, id "movie_table_body" is useful for jQuery to find this html element -->
     <tbody id="movie_table_body"></tbody>
 </table>
+
+<div id="select_page_div">
+    <button id="prev_page_button" type="button" class="btn btn-primary" onclick="getPrevPage()">PREV</button>
+    <button id="next_page_button" type="button" class="btn btn-primary" onclick="getNextPage()">NEXT</button>
+</div>
 
 <!-- Load jQuery and Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
