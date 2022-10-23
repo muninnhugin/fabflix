@@ -140,10 +140,11 @@ public class MovieListServlet extends HttpServlet {
         return movie;
     }
 
-    private String retrieveQuery(HttpServletRequest request) throws UnsupportedEncodingException {
+    private String retrieveQuery(HttpServletRequest request) {
         String selectClause = "SELECT * ";
         String fromClause = "FROM movies m, ratings r ";
         String whereClause = "WHERE m.id = r.movieId ";
+        String orderByClause = "ORDER BY ";
         String limitClause = "LIMIT 20";
 
         String title = request.getParameter("title");
@@ -151,6 +152,10 @@ public class MovieListServlet extends HttpServlet {
         String director = request.getParameter("director");
         String starName = request.getParameter("star_name");
         String genreId = request.getParameter("genre_id");
+
+        String orderBy = request.getParameter("order_by");
+        String titleOrder = request.getParameter("title_order");
+        String ratingOrder = request.getParameter("rating_order");
 
         if(isValid(title))
         {
@@ -178,9 +183,12 @@ public class MovieListServlet extends HttpServlet {
                     " AND g.id = " + genreId;
         }
 
+        orderByClause += getOrderByArgs(orderBy, titleOrder, ratingOrder);
+
         String query =  selectClause + "\n" +
                         fromClause + "\n" +
                         whereClause + "\n" +
+                        orderByClause + "\n" +
                         limitClause;
 
         return query;
@@ -194,5 +202,50 @@ public class MovieListServlet extends HttpServlet {
     private String like(String param)
     {
         return param + "%";
+    }
+
+    private String getOrderByArgs(String orderBy, String titleOrder, String ratingOrder)
+    {
+        String args = "";
+        String titleArg = "";
+        String ratingArg = "";
+        if(!isValid(orderBy))
+        {
+            orderBy = "rating";
+        }
+        if(!isValid(titleOrder))
+        {
+            titleOrder = "asc";
+        }
+        if(!isValid(ratingOrder))
+        {
+            ratingOrder = "desc";
+        }
+        if(titleOrder.equals("desc"))
+        {
+            titleArg = " m.title DESC ";
+        }
+        else
+        {
+            titleArg = " m.title ASC ";
+        }
+        if(ratingOrder.equals("asc"))
+        {
+            ratingArg = " r.rating ASC ";
+        }
+        else
+        {
+            ratingArg = " r.rating DESC ";
+        }
+        if(orderBy.equals("title"))
+        {
+            args = titleArg + "," + ratingArg;
+        }
+        else
+        {
+            args = ratingArg + "," + titleArg;
+        }
+
+        return args;
     }
 }

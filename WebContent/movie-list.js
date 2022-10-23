@@ -1,7 +1,4 @@
-function appendComma(i, length, html)
-{
-    if(i != 1 && i != length)   html += ", ";
-}
+let order_by_form = jQuery("#order_by_form");
 
 function getURLParameter(name) {
     let urlParams = new URLSearchParams(location.search);
@@ -66,6 +63,30 @@ function handleMovieResult(resultData) {
     }
 }
 
+function sortRequest(sortEvent)
+{
+    console.log("handling sort request");
+    sortEvent.preventDefault();
+    let order_by = jQuery("#order_by").val();
+    let rating_order = jQuery("#rating_order").val();
+    let title_order = jQuery("#title_order").val();
+    jQuery.ajax({
+        dataType: "json", // Setting return data type
+        method: "GET", // Setting request method
+        url: "api/movie-list", // Setting request url, which is mapped by MovieListServlet in MovieListServlet.java
+        data: { title: getURLParameter("title"),
+            year: getURLParameter("year"),
+            director: getURLParameter("director"),
+            star_name: getURLParameter("star_name"),
+            genre_id: getURLParameter("genre_id"),
+            order_by: order_by,
+            rating_order: rating_order,
+            title_order: title_order
+        },
+        success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
+    });
+}
+
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
@@ -74,5 +95,5 @@ jQuery.ajax({
     success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
 });
 
-
+order_by_form.submit(sortRequest);
 

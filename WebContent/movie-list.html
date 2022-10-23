@@ -24,8 +24,24 @@
 
 <h1>Movies</h1>
 
-<form id="genre_browse_form" method="get" action="#"></form>
-
+<form id="order_by_form" method="get" action="#">
+    Sort First By
+    <select id="order_by">
+        <option value="rating">Rating</option>
+        <option value="title">Title</option>
+    </select>
+    Rating
+    <select id="rating_order">
+        <option value="desc" selected>Descending</option>
+        <option value="asc">Ascending</option>
+    </select>
+    Title
+    <select id="title_order">
+        <option value="asc" selected>Ascending</option>
+        <option value="desc">Descending</option>
+    </select>
+    <input type="submit" value="Sort">
+</form>
 <!-- Id "movie_table" is useful for jQuery to find the html element with id, class here is mapping to Bootstrap defined class CSS -->
 <table id="movie_table" class="table table-striped">
     <!-- Create a table header -->
