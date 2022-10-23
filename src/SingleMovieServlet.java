@@ -73,7 +73,8 @@ public class SingleMovieServlet extends HttpServlet {
             // get movie genres
             query = "SELECT *\n" +
                     "FROM movies m, genres_in_movies gm, genres g\n" +
-                    "WHERE m.id = ? AND m.id = gm.movieId AND gm.genreId = g.id";
+                    "WHERE m.id = ? AND m.id = gm.movieId AND gm.genreId = g.id\n" +
+                    "ORDER BY g.name ASC";
             statement = conn.prepareStatement(query);
             statement.setString(1, id);
             rs = statement.executeQuery();
@@ -83,9 +84,14 @@ public class SingleMovieServlet extends HttpServlet {
             }
 
             // get stars information
-            query = "SELECT *" +
-                    "FROM movies m, stars_in_movies sm, stars s \n" +
-                    "WHERE m.id = ? AND m.id = sm.movieId AND sm.starId = s.id";
+            query = "SELECT starId, s.name, s.birthYear, COUNT(movieId)\n" +
+                    "FROM stars_in_movies, stars s\n" +
+                    "WHERE starId IN (SELECT sm.starId\n" +
+                    "\t\t\t\tFROM movies m, stars_in_movies sm, stars s\n" +
+                    "\t\t\t\tWHERE m.id = ? AND m.id = sm.movieId AND sm.starId = s.id)\n" +
+                    "\tAND starId = s.id\n" +
+                    "GROUP BY starId\n" +
+                    "ORDER BY COUNT(movieId) DESC, name ASC";
             statement = conn.prepareStatement(query);
             statement.setString(1, id);
             rs = statement.executeQuery();
@@ -118,7 +124,6 @@ public class SingleMovieServlet extends HttpServlet {
         } finally {
             out.close();
         }
-
         // Always remember to close db connection after usage. Here it's done by try-with-resources
 
     }

@@ -2,11 +2,13 @@ function appendGenreToJquery(jqueryToAppend, genreJson, maxStars = Infinity)
 {
     jqueryToAppend.append("<p>Genres</p>" + "<div class=\"list-group\">");
     let genresNum = Math.min(maxStars, genreJson.length);
-    if(genresNum != 0)
+    if(genresNum !== 0)
     {
         for(let i = 0; i < genresNum; ++i)
         {
-            jqueryToAppend.append("<a class=\"list-group-item\"" + ">" + genreJson[i]["genre_name"] + "</a>");
+            jqueryToAppend.append("<a class='list-group-item' " +
+                "href='movie-list.html?genre_id=" + genreJson[i]["genre_id"] + "'>"
+                + genreJson[i]["genre_name"] + "</a>");
         }
     }
     else
@@ -22,7 +24,7 @@ function appendStarsToJquery(jqueryToAppend, starJson, maxStars = Infinity)
 {
     jqueryToAppend.append("<p>Stars</p>" + "<div class=\"list-group\">");
     let starsNum = Math.min(maxStars, starJson.length);
-    if(starsNum != 0)
+    if(starsNum !== 0)
     {
         for(let i = 0; i < starsNum; ++i)
         {
