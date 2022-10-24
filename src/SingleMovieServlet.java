@@ -8,12 +8,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 // Declaring a WebServlet called SingleMovieServlet, which maps to url "/api/single-movie"
 @WebServlet(name = "SingleMovieServlet", urlPatterns = "/api/single-movie")
@@ -128,4 +130,42 @@ public class SingleMovieServlet extends HttpServlet {
 
     }
 
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("application/json");
+        HttpSession session = request.getSession();
+        CartItem item = new CartItem(request);
+        String movieId = request.getParameter("movie_id");
+        int itemNo = -1;
+
+        ArrayList<CartItem> cart = (ArrayList<CartItem>) session.getAttribute("cart");
+        if (cart == null)
+        {
+            cart = new ArrayList<>();
+            cart.add(item);
+            session.setAttribute("cart", cart);
+            itemNo = 0;
+        }
+        else {
+            synchronized (cart) {
+                boolean itemAdded = false;
+                for(int i = 0; i < cart.size(); ++i)
+                {
+                    if(cart.get(i).getMovieId().equals(movieId))
+                    {
+                        cart.get(i).addOne();
+                        itemAdded = true;
+                        itemNo = i;
+                        break;
+                    }
+                }
+                if(!itemAdded)
+                {
+                    cart.add(item);
+                    itemNo = cart.size() - 1;
+                }
+
+            }
+        }
+        response.getWriter().write(cart.get(itemNo).toJson().toString());
+    }
 }

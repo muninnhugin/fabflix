@@ -16,34 +16,33 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Map;
 
 // Declaring a WebServlet called SingleMovieServlet, which maps to url "/api/single-movie"
 @WebServlet(name = "CartServlet", urlPatterns = "/api/cart")
 public class CartServlet extends HttpServlet {
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        CartItem cartItem = new CartItem(request);
-        System.out.println(cartItem.toJson());
-        HttpSession session = request.getSession();
-
-        // get the previous items in a ArrayList
-        ArrayList<CartItem> cart = (ArrayList<CartItem>) session.getAttribute("cart");
-        if (cart == null)
-        {
-            cart = new ArrayList<CartItem>();
-            cart.add(cartItem);
-            session.setAttribute("cart", cart);
-        }
-        else {
-            // prevent corrupted states through sharing under multi-threads
-            // will only be executed by one thread at a time
-            synchronized (cart) {
-                cart.add(cartItem);
-            }
-        }
-
-        response.getWriter().write(getCartJson(cart).toString());
-    }
+//    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        HttpSession session = request.getSession();
+//        CartItem item = new CartItem(request);
+//
+//        ArrayList<CartItem> cart = (ArrayList<CartItem>) session.getAttribute("cart");
+//        if (cart == null)
+//        {
+//            cart = new ArrayList<>();
+//            cart.add(item);
+//            session.setAttribute("cart", cart);
+//        }
+//        else {
+//            // prevent corrupted states through sharing under multi-threads
+//            // will only be executed by one thread at a time
+//            synchronized (cart) {
+//                cart.add(item);
+//            }
+//        }
+//
+//        response.getWriter().write(getCartJson(cart).toString());
+//    }
 
     private JsonArray getCartJson(ArrayList<CartItem> cart)
     {

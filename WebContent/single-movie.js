@@ -1,3 +1,5 @@
+let movieId = getParameterByName('id'), movieTitle;
+
 /**
  * Retrieve parameter from request URL, matching by parameter name
  * @param target String
@@ -19,24 +21,40 @@ function getParameterByName(target) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+function addToCart()
+{
+    console.log("adding item to cart");
+    jQuery.ajax(
+        {
+            url: "api/single-movie",
+            method: "POST",
+            dataType: "json",
+            data: {
+                "movie_id": movieId,
+                quantity: 1
+            },
+            success: (itemData) => confirm("You have " + itemData["quantity"] + " of " + movieTitle + " in your cart")
+        }
+    )
+}
+
 function handleResult(resultData) {
 
     console.log("handleResult: populating movie info from resultData");
 
     let movieInfoElement = jQuery("#movie_info");
+    movieTitle = resultData["movie_title"];
 
-    movieInfoElement.append("<p>Title: " + resultData["movie_title"] + "</p>" +
+    movieInfoElement.append("<p>Title: " + movieTitle + "</p>" +
         "<p>Year: " + resultData["movie_year"] + "</p>" +
         "<p>Director: " + resultData["movie_director"] + "</p>" +
         "<p>Rating: " + resultData["movie_rating"] + "</p>");
 
+    movieInfoElement.append(`<input type='button' id='add_to_cart_btn'class='btn btn-primary' value='Add to Shopping Cart' onclick='addToCart()' class>`);
+
     appendGenreToJquery(movieInfoElement, resultData["movie_genres"]);
     appendStarsToJquery(movieInfoElement, resultData["movie_stars"]);
 }
-
-
-
-let movieId = getParameterByName('id');
 
 jQuery.ajax({
     dataType: "json",

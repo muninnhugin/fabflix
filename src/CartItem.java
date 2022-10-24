@@ -3,18 +3,24 @@ import com.google.gson.JsonObject;
 import javax.servlet.http.HttpServletRequest;
 
 public class CartItem {
-    String movieTitle;
-    int quantity;
-    double price = 5;
+    private String movieId;
+    private int quantity;
+    private double price = 5;
+
+    CartItem(String newId, int newQuantity)
+    {
+        movieId = newId;
+        quantity = newQuantity;
+    }
 
     CartItem(HttpServletRequest request)
     {
-        String movie_title = request.getParameter("movie_title");
-        String movie_quantity = request.getParameter("movie_quantity");
+        movieId = request.getParameter("movie_id");
+        quantity = Integer.parseInt(request.getParameter("quantity"));
     }
 
-    public String getMovieTitle() {
-        return movieTitle;
+    public String getMovieId() {
+        return movieId;
     }
 
     public int getQuantity() {
@@ -25,13 +31,19 @@ public class CartItem {
         return price;
     }
 
-    public JsonObject toJson() {
-        JsonObject cartItemJson = new JsonObject();
+    public JsonObject toJson()
+    {
+        JsonObject itemJson = new JsonObject();
 
-        cartItemJson.addProperty("movie_title", movieTitle);
-        cartItemJson.addProperty("quantity", quantity);
-        cartItemJson.addProperty("price", price);
+        itemJson.addProperty("movie_id", movieId);
+        itemJson.addProperty("quantity", quantity);
+        itemJson.addProperty("price", price);
 
-        return cartItemJson;
+        return itemJson;
+    }
+
+    public void addOne()
+    {
+        ++quantity;
     }
 }
