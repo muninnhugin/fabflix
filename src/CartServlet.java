@@ -16,12 +16,27 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 // Declaring a WebServlet called SingleMovieServlet, which maps to url "/api/single-movie"
 @WebServlet(name = "CartServlet", urlPatterns = "/api/cart")
 public class CartServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("application/json");
 
+        HttpSession session = request.getSession();
+
+        ArrayList<CartItem> cart = (ArrayList<CartItem>) session.getAttribute("cart");
+        if (cart == null) {
+            cart = new ArrayList<>();
+        }
+        // Log to localhost log
+        request.getServletContext().log("getting " + cart.size() + " items");
+
+        // write all the data into the jsonObject
+        response.getWriter().write(getCartJson(cart).toString());
+    }
 //    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 //        HttpSession session = request.getSession();
 //        CartItem item = new CartItem(request);

@@ -64,12 +64,31 @@ function handleMovieResult(resultData) {
                 resultData[i]["movie_stars"][j]["star_name"] + "</a></li>";
         }
         rowHTML += "</ul></td>";
+        //rowHTML += "<td><input type='button' id='add_to_cart_btn' class='btn btn-primary' value='Add to Shopping Cart' onclick='addToCart()'></td>"
         rowHTML += "</tr>";
 
         // Append the row created to the table body, which will refresh the page
         movieTableBodyElement.append(rowHTML);
     }
 }
+
+// function addToCart(movieId)
+// {
+//     console.log("adding item to cart");
+//     jQuery.ajax(
+//         {
+//             url: "api/single-movie",
+//             method: "POST",
+//             dataType: "json",
+//             data: {
+//                 "movie_id": movieId,
+//                 "movie_title": movieTitle,
+//                 quantity: 1
+//             },
+//             success: (itemData) => confirm("You have " + itemData["quantity"] + " of " + movieTitle + " in your cart")
+//         }
+//     )
+// }
 
 function sortRequest(sortEvent)
 {
@@ -102,8 +121,6 @@ requestMovieData();
 // TODO change to on select instead of on submit
 sort_form.submit(sortRequest);
 
-
-// TODO main: implement next and prev button
 function getNextPage()
 {
     page_number += 1;

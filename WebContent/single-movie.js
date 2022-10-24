@@ -31,7 +31,8 @@ function addToCart()
             dataType: "json",
             data: {
                 "movie_id": movieId,
-                quantity: 1
+                "movie_title": movieTitle,
+                "quantity": 1
             },
             success: (itemData) => confirm("You have " + itemData["quantity"] + " of " + movieTitle + " in your cart")
         }
@@ -50,7 +51,7 @@ function handleResult(resultData) {
         "<p>Director: " + resultData["movie_director"] + "</p>" +
         "<p>Rating: " + resultData["movie_rating"] + "</p>");
 
-    movieInfoElement.append(`<input type='button' id='add_to_cart_btn'class='btn btn-primary' value='Add to Shopping Cart' onclick='addToCart()' class>`);
+    movieInfoElement.append(`<input type='button' id='add_to_cart_btn'class='btn btn-primary' value='Add to Shopping Cart' onclick='addToCart()'>`);
 
     appendGenreToJquery(movieInfoElement, resultData["movie_genres"]);
     appendStarsToJquery(movieInfoElement, resultData["movie_stars"]);
