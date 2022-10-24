@@ -137,22 +137,22 @@ public class SingleMovieServlet extends HttpServlet {
         String movieId = request.getParameter("movie_id");
         int itemNo = -1;
 
-        ArrayList<CartItem> cart = (ArrayList<CartItem>) session.getAttribute("cart");
+        Cart cart = (Cart) session.getAttribute("cart");
         if (cart == null)
         {
-            cart = new ArrayList<>();
-            cart.add(item);
+            cart = new Cart();
+            cart.getCart().add(item);
             session.setAttribute("cart", cart);
             itemNo = 0;
         }
         else {
             synchronized (cart) {
                 boolean itemAdded = false;
-                for(int i = 0; i < cart.size(); ++i)
+                for(int i = 0; i < cart.getCart().size(); ++i)
                 {
-                    if(cart.get(i).getMovieId().equals(movieId))
+                    if(cart.getCart().get(i).getMovieId().equals(movieId))
                     {
-                        cart.get(i).addOne();
+                        cart.getCart().get(i).addOne();
                         itemAdded = true;
                         itemNo = i;
                         break;
@@ -160,12 +160,12 @@ public class SingleMovieServlet extends HttpServlet {
                 }
                 if(!itemAdded)
                 {
-                    cart.add(item);
-                    itemNo = cart.size() - 1;
+                    cart.getCart().add(item);
+                    itemNo = cart.getCart().size() - 1;
                 }
 
             }
         }
-        response.getWriter().write(cart.get(itemNo).toJson().toString());
+        response.getWriter().write(cart.getCart().get(itemNo).toJson().toString());
     }
 }

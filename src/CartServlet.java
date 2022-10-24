@@ -27,15 +27,13 @@ public class CartServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
 
-        ArrayList<CartItem> cart = (ArrayList<CartItem>) session.getAttribute("cart");
+        Cart cart = (Cart) session.getAttribute("cart");
         if (cart == null) {
-            cart = new ArrayList<>();
+            cart = new Cart();
         }
-        // Log to localhost log
-        request.getServletContext().log("getting " + cart.size() + " items");
 
         // write all the data into the jsonObject
-        response.getWriter().write(getCartJson(cart).toString());
+        response.getWriter().write(cart.toJson().toString());
     }
 //    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 //        HttpSession session = request.getSession();
@@ -58,14 +56,4 @@ public class CartServlet extends HttpServlet {
 //
 //        response.getWriter().write(getCartJson(cart).toString());
 //    }
-
-    private JsonArray getCartJson(ArrayList<CartItem> cart)
-    {
-        JsonArray cartJson = new JsonArray();
-        for(CartItem cartItem : cart)
-        {
-            cartJson.add(cartItem.toJson());
-        }
-        return cartJson;
-    }
 }
