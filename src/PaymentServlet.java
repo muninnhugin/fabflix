@@ -14,6 +14,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.Normalizer;
 
 @WebServlet(name = "PaymentServlet", urlPatterns = "/api/payment")
 public class PaymentServlet extends HttpServlet {
@@ -38,23 +40,19 @@ public class PaymentServlet extends HttpServlet {
             session.setAttribute("cart", cart);
         }
 
-        double cartTotal = 0;
-        for(CartItem item: cart.getCart())
-        {
-            cartTotal += item.getPrice() * item.getQuantity();
-        }
-
         JsonObject totalJson = new JsonObject();
-        totalJson.addProperty("cart_total", cartTotal);
+        totalJson.addProperty("cart_total", cart.getTotal());
         // write all the data into the jsonObject
         response.getWriter().write(totalJson.toString());
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("application/json");
         PrintWriter out = response.getWriter();
 
         CreditCardInfo enteredCcInfo = new CreditCardInfo(request);
 
+        PaymentConfirmation paymentConfirmation = new PaymentConfirmation();
         FormSubmitResponse paymentResponse = new FormSubmitResponse();
         try (Connection conn = dataSource.getConnection()) {
             // Get a connection from dataSource
@@ -77,25 +75,26 @@ public class PaymentServlet extends HttpServlet {
                         new CreditCardInfo(correctFirstName, correctLastName, enteredCcInfo.getCcId(), correctExpiration);
                 if(enteredCcInfo.isMatching(correctInfo))
                 {
-                    paymentResponse.setSuccess("correct payment information");
-                    // TODO call and implement insertSale()
+                    paymentConfirmation = insertSale(request);
                 }
                 else {
 
                     request.getServletContext().log("Payment information not matching");
-                    paymentResponse.setFail("incorrect payment information");
+                    paymentResponse.setFail("Incorrect payment information. Please re-enter.");
+                    paymentConfirmation.setStatus(paymentResponse);
                 }
             }
             else
             {
                 paymentResponse.setFail("cannot find matching credit card number");
-                request.getServletContext().log("Payment failed: no such credit card number ");
+                request.getServletContext().log("Payment failed: no such credit card number. Please re-enter.");
+                paymentConfirmation.setStatus(paymentResponse);
             }
 
             rs.close();
             statement.close();
 
-            out.write(paymentResponse.toJson().toString());
+            out.write(paymentConfirmation.toJson().toString());
 
             // Set response status to 200 (OK)
             response.setStatus(200);
@@ -113,5 +112,53 @@ public class PaymentServlet extends HttpServlet {
         } finally {
             out.close();
         }
+    }
+
+    private PaymentConfirmation insertSale(HttpServletRequest request) throws SQLException
+    {
+        PaymentConfirmation confirmation = new PaymentConfirmation();
+        FormSubmitResponse status = new FormSubmitResponse();
+
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        Cart cart = (Cart) session.getAttribute("cart");
+
+        String query = "INSERT INTO sales(customerId, movieId, saleDate) \n" +
+                "VALUES (?, ?, current_date ());";
+        Connection connection = dataSource.getConnection();
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, user.getId());
+
+        for(CartItem item : cart.getCart())
+        {
+            statement.setString(2, item.getMovieId());
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected > 0)
+            {
+                status.setSuccess("purchase success");
+                confirmation.setStatus(status);
+                confirmation.setUserId(user.getId());
+
+                // get last sale id
+                query = "SELECT *\n" +
+                        "FROM sales\n" +
+                        "ORDER BY id DESC\n" +
+                        "LIMIT 1;";
+                PreparedStatement saleStatement = connection.prepareStatement(query);
+                ResultSet rs = saleStatement.executeQuery();
+                rs.next();
+                confirmation.setSaleId(rs.getString("id"));
+                confirmation.setCart(cart);
+            }
+            else
+            {
+                status.setFail("payment validation success. purchase fail");
+                confirmation.setStatus(status);
+            }
+        }
+
+        session.setAttribute("cart", new Cart());
+
+        return confirmation;
     }
 }

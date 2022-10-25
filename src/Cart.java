@@ -5,7 +5,7 @@ import java.util.ArrayList;
 // TODO add some common arrayList function wrappers: add, get, etc.
 
 public class Cart {
-    ArrayList<CartItem> cart;
+    private ArrayList<CartItem> cart;
 
     Cart()
     {
@@ -26,5 +26,14 @@ public class Cart {
         }
 
         return cartJson;
+    }
+
+    public double getTotal() {
+        double total = 0;
+        for(CartItem item: cart)
+        {
+            total += item.getQuantity() * item.getPrice();
+        }
+        return total;
     }
 }

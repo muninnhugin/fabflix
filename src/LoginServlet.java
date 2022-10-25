@@ -59,7 +59,8 @@ public class LoginServlet extends HttpServlet {
                     request.getServletContext().log("Login failed");
                 }
                 else {
-                    request.getSession().setAttribute("user", new User(username));
+                    String userId = rs.getString("id");
+                    request.getSession().setAttribute("user", new User(username, userId));
                     loginResponse.setSuccess("success");
                 }
             }

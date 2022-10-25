@@ -22,10 +22,19 @@ function handlePaymentSubmit(paymentEvent)
 
 function handlePaymentSubmitResult(result)
 {
-    let status = result["status"];
-    let message = result["message"];
-    let rowHtml =   "<p>Payment Status: " + status + "</p>" +
-                    "<p>Payment Message: " + message + "</p>"
+    let rowHtml =   "<p>Payment Status: " + result["status"] + "</p>" +
+                    "<p>Payment Message: " + result["message"] + "</p>";
+    if(result["status"] === "success") {
+
+        rowHtml +=  "<p>Sale ID: " + result["sale_id"] + "</p>" +
+                    "<p>Customer ID: " + result["user_id"] + "</p>";
+        for(let i = 0; i < result["cart_items"].length; ++i)
+        {
+            rowHtml += "<p>Movie Title: " + result["cart_items"][i]["movie_title"] + "</p>" +
+                "<p>Quantity Purchased: " + result["cart_items"][i]["quantity"] + "</p>"
+        }
+        rowHtml += "<p>Total: " + result["cart_total"] + "</p>";
+    }
     form_submit_feedback.append(rowHtml);
 }
 

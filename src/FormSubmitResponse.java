@@ -33,6 +33,11 @@ public class FormSubmitResponse {
         this.message = message;
     }
 
+    public void appendMessage(String toAppend)
+    {
+        message += " " + toAppend;
+    }
+
     public JsonObject toJson()
     {
         JsonObject responseJson = new JsonObject();

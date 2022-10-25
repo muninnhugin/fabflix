@@ -6,14 +6,20 @@ import com.google.gson.JsonObject;
  */
 public class User {
 
-    private final String username;
+    private String username;
+    private String id;
 
-    public User(String username) {
+    public User(String username, String id) {
         this.username = username;
+        this.id = id;
     }
 
     public String getUsername() {
         return username;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public JsonObject toJson()
@@ -21,6 +27,7 @@ public class User {
         JsonObject userJson = new JsonObject();
 
         userJson.addProperty("username", username);
+        userJson.addProperty("user_id", id);
 
         return userJson;
     }
