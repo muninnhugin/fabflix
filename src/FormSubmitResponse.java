@@ -1,13 +1,13 @@
 import com.google.gson.JsonObject;
 
-public class LoginResponse {
+public class FormSubmitResponse {
     private String status;
     private String message;
 
-    private static final String LOGIN_SUCCESS = "success";
-    private static final String LOGIN_FAIL = "fail";
+    private static final String SUCCESS = "success";
+    private static final String FAIL = "fail";
 
-    LoginResponse()
+    FormSubmitResponse()
     {
         status = "";
         message = "";
@@ -21,15 +21,15 @@ public class LoginResponse {
         return status;
     }
 
-    public void setLoginSuccess(String message)
+    public void setSuccess(String message)
     {
-        status = LOGIN_SUCCESS;
+        status = SUCCESS;
         this.message = message;
     }
 
-    public void setLoginFail(String message)
+    public void setFail(String message)
     {
-        status = LOGIN_FAIL;
+        status = FAIL;
         this.message = message;
     }
 

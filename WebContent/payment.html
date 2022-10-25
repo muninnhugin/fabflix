@@ -25,21 +25,24 @@
 <button id="checkout_button" class="btn btn-primary" onclick="cartRedirect()">Back to Cart</button>
 
 <div id="payment_total">Your total payment is $</div>
-<!--<form id="search_form" method="get" action="#">-->
-<!--    <label>-->
-<!--        <input name="title" placeholder="Enter movie title" type="text">-->
-<!--    </label>-->
-<!--    <label>-->
-<!--        <input name="year" placeholder="Enter movie year" type="text">-->
-<!--    </label>-->
-<!--    <label>-->
-<!--        <input name="director" placeholder="Enter director name" type="text">-->
-<!--    </label>-->
-<!--    <label>-->
-<!--        <input name="star_name" placeholder="Enter star name" type="text">-->
-<!--    </label>-->
-<!--    <input type="submit" value="Search">-->
-<!--</form>-->
+
+<form id="payment_form" method="post" action="#">
+    <label>
+        <input name="first_name" placeholder="Cardholder's first name" type="text">
+    </label><br>
+    <label>
+        <input name="last_name" placeholder="Cardholder's last name" type="text">
+    </label><br>
+    <label>
+        <input name="credit_card_num" placeholder="Credit card number" type="text">
+    </label><br>
+    <label>
+        <input name="expiration_date" placeholder="Expiration date" type="text">
+    </label><br>
+    <input type="submit" value="Place Order">
+</form>
+
+<div id="form_submit_feedback"></div>
 
 <!-- Load jQuery and Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

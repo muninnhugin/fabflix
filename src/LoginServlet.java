@@ -1,6 +1,5 @@
 import com.google.gson.JsonObject;
 
-import javax.management.Query;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletConfig;
@@ -12,7 +11,6 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -38,7 +36,7 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        LoginResponse loginResponse = new LoginResponse();
+        FormSubmitResponse loginResponse = new FormSubmitResponse();
         try (Connection conn = dataSource.getConnection()) {
             // Get a connection from dataSource
 
@@ -56,19 +54,19 @@ public class LoginServlet extends HttpServlet {
                 if(!password.equals(correctPassword))
                 {
                     // Login fail
-                    loginResponse.setLoginFail("incorrect login password");
+                    loginResponse.setFail("incorrect login password");
                     // Log to localhost log
                     request.getServletContext().log("Login failed");
                 }
                 else {
                     request.getSession().setAttribute("user", new User(username));
-                    loginResponse.setLoginSuccess("success");
+                    loginResponse.setSuccess("success");
                 }
             }
             else
             {
                 // Login fail
-                loginResponse.setLoginFail("incorrect login username");
+                loginResponse.setFail("incorrect login username");
                 // Log to localhost log
                 request.getServletContext().log("Login failed");
             }
