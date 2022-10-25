@@ -16,42 +16,37 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="site.css">
 
     <title>Fabflix</title>
 </head>
 <body>
-<button id="checkout_button" class="btn btn-primary" onclick="cartRedirect()">Checkout</button>
-<form id="search_form" method="get" action="#">
-    <label>
-        <input name="title" placeholder="Enter movie title" type="text">
-    </label>
-    <label>
-        <input name="year" placeholder="Enter movie year" type="text">
-    </label>
-    <label>
-        <input name="director" placeholder="Enter director name" type="text">
-    </label>
-    <label>
-        <input name="star_name" placeholder="Enter star name" type="text">
-    </label>
-    <input type="submit" value="Search">
-</form>
 
-<label for="genre_browse_list">Browse by Genre</label>
-<div id="genre_browse_list" class="browse_list"></div>
+<button id="checkout_button" class="btn btn-primary" onclick="cartRedirect()">Back to Cart</button>
 
-<label for="title_browse_list">Browse by Title</label>
-<div id="title_browse_list"></div>
+<div id="payment_total">Your total payment is $</div>
+<!--<form id="search_form" method="get" action="#">-->
+<!--    <label>-->
+<!--        <input name="title" placeholder="Enter movie title" type="text">-->
+<!--    </label>-->
+<!--    <label>-->
+<!--        <input name="year" placeholder="Enter movie year" type="text">-->
+<!--    </label>-->
+<!--    <label>-->
+<!--        <input name="director" placeholder="Enter director name" type="text">-->
+<!--    </label>-->
+<!--    <label>-->
+<!--        <input name="star_name" placeholder="Enter star name" type="text">-->
+<!--    </label>-->
+<!--    <input type="submit" value="Search">-->
+<!--</form>-->
 
 <!-- Load jQuery and Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-<script src="index.js"></script>
 <script src="redirect.js"></script>
-
+<script src="payment.js"></script>
 </body>
 </html>
