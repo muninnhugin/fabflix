@@ -35,8 +35,19 @@ public class LoginServlet extends HttpServlet {
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
 
         FormSubmitResponse loginResponse = new FormSubmitResponse();
+
+        try {
+            RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+        } catch (Exception e) {
+            loginResponse.setFail(e.getMessage());
+            out.write(loginResponse.toJson().toString());
+            out.close();
+            response.setStatus(200);
+        }
+
         try (Connection conn = dataSource.getConnection()) {
             // Get a connection from dataSource
 
