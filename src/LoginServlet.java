@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -54,10 +55,11 @@ public class LoginServlet extends HttpServlet {
             // Construct a query with parameter represented by "?"
             String query = "SELECT * \n" +
                     "FROM customers c \n" +
-                    "WHERE c.email = '" + username + "'";
+                    "WHERE c.email = ?";
 
-            Statement statement = conn.createStatement();
-            ResultSet rs = statement.executeQuery(query);
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, username);
+            ResultSet rs = statement.executeQuery();
 
             if(rs.next())
             {
