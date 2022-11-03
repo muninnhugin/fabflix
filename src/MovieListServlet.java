@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.sql.*;
+import java.util.ArrayList;
 
 
 // Declaring a WebServlet called StarsServlet, which maps to url "/api/stars"
@@ -40,15 +41,13 @@ public class MovieListServlet extends HttpServlet {
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 
-        // Get a connection from dataSource and let resource manager close the connection after usage.
-        try (Connection conn = dataSource.getConnection()) {
+        try
+        {
 
-            Statement statement = conn.createStatement();
-
-            String query = retrieveQuery(request);
+            PreparedStatement statement = retrieveQuery(request);
 
             // Perform the query
-            ResultSet rs = statement.executeQuery(query);
+            ResultSet rs = statement.executeQuery();
 
             JsonArray movieJsons = new JsonArray();
 
@@ -141,8 +140,9 @@ public class MovieListServlet extends HttpServlet {
         return movie;
     }
 
-    // TODO refactor this function
-    private String retrieveQuery(HttpServletRequest request) {
+    // TODO test function for new PreparedStatement return
+    private PreparedStatement retrieveQuery(HttpServletRequest request) throws SQLException
+    {
         String selectClause = "SELECT * ";
         String fromClause = "FROM movies m, ratings r ";
         String whereClause = "WHERE m.id = r.movieId ";
@@ -162,30 +162,40 @@ public class MovieListServlet extends HttpServlet {
         String recordsPerPage = request.getParameter("records_per_page");
         String pageNumber = request.getParameter("page_number");
 
+        ArrayList<String> argList = new ArrayList<>();
+
         if(isValid(title))
         {
-            if(!title.equals("*")) {  whereClause += " AND m.title LIKE '" + like(title) + "'";}
+            if(!title.equals("*"))
+            {
+                whereClause += " AND m.title LIKE ?";
+                argList.add(like(title));
+            }
             else {  whereClause += " AND m.title REGEXP '^[^A-Z0-9]' ";  }
         }
         if(isValid(year))
         {
-            whereClause += " AND m.year = " + year;
+            whereClause += " AND m.year = ?";
+            argList.add(year);
         }
         if(isValid(director))
         {
-            whereClause += " AND m.director LIKE '" + like(director) + "'";
+            whereClause += " AND m.director LIKE ?";
+            argList.add(like(director));
         }
         if(isValid(starName))
         {
-            fromClause += ", stars_in_movies sm, stars s";
+            fromClause += ", stars_in_movies sm, stars s ";
             whereClause +=  " AND m.id = sm.movieId AND sm.starId = s.id " +
-                            " AND s.name LIKE '" + like(starName) + "'";
+                            " AND s.name LIKE ? ";
+            argList.add(like(starName));
         }
         if(isValid(genreId))
         {
-            fromClause += ", genres_in_movies gm, genres g";
+            fromClause += ", genres_in_movies gm, genres g ";
             whereClause +=  " AND m.id = gm.movieId AND gm.genreId = g.id " +
-                    " AND g.id = " + genreId;
+                    " AND g.id = ? ";
+            argList.add(genreId);
         }
         if(!isValid(recordsPerPage))
         {
@@ -193,12 +203,15 @@ public class MovieListServlet extends HttpServlet {
         }
         else
         {
-            limitClause += recordsPerPage;
+            limitClause += " ? ";
+            argList.add(recordsPerPage);
         }
 
-        offsetClause += getOffset(recordsPerPage, pageNumber);
+        offsetClause += " ? ";
+        argList.add(getOffset(recordsPerPage, pageNumber));
 
-        orderByClause += getOrderByArgs(orderBy, titleOrder, ratingOrder);
+        orderByClause += " ? ";
+        argList.add(getOrderByArgs(orderBy, titleOrder, ratingOrder));
 
         String query =  selectClause + "\n" +
                         fromClause + "\n" +
@@ -207,7 +220,15 @@ public class MovieListServlet extends HttpServlet {
                         limitClause + "\n" +
                         offsetClause;
 
-        return query;
+        Connection connection = dataSource.getConnection();
+        PreparedStatement statement = connection.prepareStatement(query);
+
+        for(int i = 0; i < argList.size(); ++i)
+        {
+            statement.setString(i, argList.get(i));
+        }
+
+        return statement;
     }
 
     private boolean isValid(String param)
