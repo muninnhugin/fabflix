@@ -15,10 +15,12 @@ import java.sql.*;
 import java.util.ArrayList;
 
 
+
 // Declaring a WebServlet called StarsServlet, which maps to url "/api/stars"
 @WebServlet(name = "MovieListServlet", urlPatterns = "/api/movie-list")
 public class MovieListServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    private static final int DEFAULT_PAGE_SIZE = 25;
 
     // Create a dataSource which registered in web.
     private DataSource dataSource;
@@ -43,25 +45,7 @@ public class MovieListServlet extends HttpServlet {
 
         try
         {
-
-            PreparedStatement statement = retrieveQuery(request);
-
-            // Perform the query
-            ResultSet rs = statement.executeQuery();
-
-            JsonArray movieJsons = new JsonArray();
-
-            // Iterate through each row of rs
-            while (rs.next()) {
-                Movie movie = new Movie(rs);
-                getGenres(movie);
-                getStars(movie);
-
-                JsonObject movieJson = movie.toJson();
-                movieJsons.add(movieJson);
-            }
-            rs.close();
-            statement.close();
+            JsonArray movieJsons = getMoviesJson(request);
 
             // Log to localhost log
             request.getServletContext().log("getting " + movieJsons.size() + " results");
@@ -141,14 +125,14 @@ public class MovieListServlet extends HttpServlet {
     }
 
     // TODO test function for new PreparedStatement return
-    private PreparedStatement retrieveQuery(HttpServletRequest request) throws SQLException
+    private JsonArray getMoviesJson(HttpServletRequest request) throws SQLException
     {
         String selectClause = "SELECT * ";
         String fromClause = "FROM movies m, ratings r ";
         String whereClause = "WHERE m.id = r.movieId ";
         String orderByClause = "ORDER BY ";
         String limitClause = "LIMIT ";
-        String offsetClause = " OFFSET ";
+        String offsetClause = "OFFSET ";
 
         String title = request.getParameter("title");
         String year = request.getParameter("year");
@@ -162,7 +146,11 @@ public class MovieListServlet extends HttpServlet {
         String recordsPerPage = request.getParameter("records_per_page");
         String pageNumber = request.getParameter("page_number");
 
-        ArrayList<String> argList = new ArrayList<>();
+        int numberOfRecords;
+        if(!isValid(recordsPerPage)) {  numberOfRecords = DEFAULT_PAGE_SIZE; }
+        else {  numberOfRecords = Integer.parseInt(recordsPerPage); }
+
+        ArrayList<Object> argList = new ArrayList<>();
 
         if(isValid(title))
         {
@@ -176,7 +164,7 @@ public class MovieListServlet extends HttpServlet {
         if(isValid(year))
         {
             whereClause += " AND m.year = ?";
-            argList.add(year);
+            argList.add(Integer.parseInt(year));
         }
         if(isValid(director))
         {
@@ -187,7 +175,7 @@ public class MovieListServlet extends HttpServlet {
         {
             fromClause += ", stars_in_movies sm, stars s ";
             whereClause +=  " AND m.id = sm.movieId AND sm.starId = s.id " +
-                            " AND s.name LIKE ? ";
+                    " AND s.name LIKE ? ";
             argList.add(like(starName));
         }
         if(isValid(genreId))
@@ -195,40 +183,59 @@ public class MovieListServlet extends HttpServlet {
             fromClause += ", genres_in_movies gm, genres g ";
             whereClause +=  " AND m.id = gm.movieId AND gm.genreId = g.id " +
                     " AND g.id = ? ";
-            argList.add(genreId);
+            argList.add(Integer.parseInt(genreId));
         }
-        if(!isValid(recordsPerPage))
-        {
-            limitClause += " 25 ";
-        }
-        else
-        {
-            limitClause += " ? ";
-            argList.add(recordsPerPage);
-        }
+
+        limitClause += " ? ";
+        argList.add(numberOfRecords);
 
         offsetClause += " ? ";
         argList.add(getOffset(recordsPerPage, pageNumber));
 
-        orderByClause += " ? ";
-        argList.add(getOrderByArgs(orderBy, titleOrder, ratingOrder));
+        // getOrderByArgs check for a hardcoded string and return a hardcoded string
+        // so I decide to add its value as is
+        orderByClause += getOrderByArgs(orderBy, titleOrder, ratingOrder);
 
         String query =  selectClause + "\n" +
-                        fromClause + "\n" +
-                        whereClause + "\n" +
-                        orderByClause + "\n" +
-                        limitClause + "\n" +
-                        offsetClause;
+                fromClause + "\n" +
+                whereClause + "\n" +
+                orderByClause + "\n" +
+                limitClause + "\n" +
+                offsetClause;
 
         Connection connection = dataSource.getConnection();
         PreparedStatement statement = connection.prepareStatement(query);
 
         for(int i = 0; i < argList.size(); ++i)
         {
-            statement.setString(i, argList.get(i));
+            if(argList.get(i) instanceof String)
+            {
+                statement.setString(i + 1, (String) argList.get(i));
+            }
+            else if(argList.get(i) instanceof Integer)
+            {
+                statement.setInt(i + 1, (int) argList.get(i));
+            }
         }
 
-        return statement;
+        JsonArray movieJsons = new JsonArray();
+
+        ResultSet rs = statement.executeQuery();
+        while(rs.next())
+        {
+            Movie movie = new Movie(rs);
+            getGenres(movie);
+            getStars(movie);
+
+            JsonObject movieJson = movie.toJson();
+            movieJsons.add(movieJson);
+        }
+
+        rs.close();
+        statement.close();
+        connection.close();
+
+        return movieJsons;
     }
 
     private boolean isValid(String param)
@@ -285,7 +292,7 @@ public class MovieListServlet extends HttpServlet {
 
         return args;
     }
-    private String getOffset(String recordsPerPageString, String pageNumberString)
+    private int getOffset(String recordsPerPageString, String pageNumberString)
     {
         int recordsPerPage = 25;
         int pageNumber = 0;
@@ -301,6 +308,6 @@ public class MovieListServlet extends HttpServlet {
 
         int offset = recordsPerPage * pageNumber;
 
-        return Integer.toString(offset);
+        return offset;
     }
 }
