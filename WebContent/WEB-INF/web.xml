@@ -2,7 +2,7 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
-    <display-name>cs122b-spring21-project1-api-example</display-name>
+    <display-name>Fabflix</display-name>
     <welcome-file-list>
         <welcome-file>movie-list.html</welcome-file>
     </welcome-file-list>
@@ -16,14 +16,23 @@
     </resource-ref>
 
     <!-- Redirection to HTTPS -->
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>HTTPSOnly</web-resource-name>
-            <url-pattern>/*</url-pattern>
-        </web-resource-collection>
-        <user-data-constraint>
-            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-        </user-data-constraint>
-    </security-constraint>
+<!--    <security-constraint>-->
+<!--        <web-resource-collection>-->
+<!--            <web-resource-name>HTTPSOnly</web-resource-name>-->
+<!--            <url-pattern>/*</url-pattern>-->
+<!--        </web-resource-collection>-->
+<!--        <user-data-constraint>-->
+<!--            <transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
+<!--        </user-data-constraint>-->
+<!--    </security-constraint>-->
+
+    <servlet>
+        <servlet-name>Employee Dashboard</servlet-name>
+        <jsp-file>/employee-login.html</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Employee Dashboard</servlet-name>
+        <url-pattern>/_dashboard</url-pattern>
+    </servlet-mapping>
 
 </web-app>

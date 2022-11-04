@@ -1,0 +1,34 @@
+<!-- This page will be redirected from any url if you are not logged in -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="site.css">
+    <title>Fablix Employee</title>
+</head>
+<body>
+<h2>Employee Login</h2>
+
+<form id="employee_login_form" method="post" action="#">
+    <label><b>Email</b></label>
+    <label>
+        <input name="email" placeholder="Enter email address" type="text">
+    </label>
+    <br>
+    <label><b>Password</b></label>
+    <label>
+        <input name="password" placeholder="Enter Password" type="password">
+    </label>
+    <br>
+    <input type="submit" value="Login">
+</form>
+
+<div id="login_error_message"></div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="employee-login.js"></script>
+
+</body>
+</html>

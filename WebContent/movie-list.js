@@ -72,24 +72,6 @@ function handleMovieResult(resultData) {
     }
 }
 
-// function addToCart(movieId)
-// {
-//     console.log("adding item to cart");
-//     jQuery.ajax(
-//         {
-//             url: "api/single-movie",
-//             method: "POST",
-//             dataType: "json",
-//             data: {
-//                 "movie_id": movieId,
-//                 "movie_title": movieTitle,
-//                 quantity: 1
-//             },
-//             success: (itemData) => confirm("You have " + itemData["quantity"] + " of " + movieTitle + " in your cart")
-//         }
-//     )
-// }
-
 function sortRequest(sortEvent)
 {
     console.log("handling sort request");

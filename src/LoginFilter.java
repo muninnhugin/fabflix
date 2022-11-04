@@ -1,7 +1,10 @@
+import com.mysql.cj.Session;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -23,8 +26,12 @@ public class LoginFilter implements Filter {
             return;
         }
 
+        HttpSession session = httpRequest.getSession();
+
         // Redirect to login page if the "user" attribute doesn't exist in session
-        if (httpRequest.getSession().getAttribute("user") == null) {
+        if (session.getAttribute("user") == null
+                && session.getAttribute("employee") == null)
+        {
             httpResponse.sendRedirect("login.html");
         } else {
             chain.doFilter(request, response);
@@ -45,6 +52,9 @@ public class LoginFilter implements Filter {
         allowedURIs.add("login.html");
         allowedURIs.add("login.js");
         allowedURIs.add("api/login");
+        allowedURIs.add("employee-login.html");
+        allowedURIs.add("_dashboard");
+        allowedURIs.add("api/employee_login");
     }
 
     public void destroy() {

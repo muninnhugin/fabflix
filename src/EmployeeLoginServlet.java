@@ -1,4 +1,5 @@
 import com.google.gson.JsonObject;
+import org.jasypt.util.password.StrongPasswordEncryptor;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -13,11 +14,9 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import org.jasypt.util.password.StrongPasswordEncryptor;
 
-@WebServlet(name = "LoginServlet", urlPatterns = "/api/login")
-public class LoginServlet extends HttpServlet {
-
+@WebServlet(name = "EmployeeLoginServlet", urlPatterns = "/api/employee_login")
+public class EmployeeLoginServlet extends HttpServlet {
     private DataSource dataSource;
 
     public void init(ServletConfig config) {
@@ -28,37 +27,21 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
-    /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
 
-        String username = request.getParameter("username");
+        String email = request.getParameter("email");
         String password = request.getParameter("password");
-        String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
 
         FormSubmitResponse loginResponse = new FormSubmitResponse();
 
-        try {
-            RecaptchaVerifyUtils.verify(gRecaptchaResponse);
-        } catch (Exception e) {
-            loginResponse.setFail(e.getMessage());
-            out.write(loginResponse.toJson().toString());
-            out.close();
-            response.setStatus(200);
-        }
-
         try (Connection conn = dataSource.getConnection()) {
-            // Get a connection from dataSource
-
-            // Construct a query with parameter represented by "?"
             String query = "SELECT * \n" +
-                    "FROM customers c \n" +
-                    "WHERE c.email = ?";
+                    "FROM employees e \n" +
+                    "WHERE e.email = ?";
 
             PreparedStatement statement = conn.prepareStatement(query);
-            statement.setString(1, username);
+            statement.setString(1, email);
             ResultSet rs = statement.executeQuery();
 
             if(rs.next())
@@ -66,21 +49,19 @@ public class LoginServlet extends HttpServlet {
                 String correctPassword = rs.getString("password");
                 if(!new StrongPasswordEncryptor().checkPassword(password, correctPassword))
                 {
-                    // Login fail
                     loginResponse.setFail("incorrect login password");
-                    // Log to localhost log
                     request.getServletContext().log("Login failed");
                 }
                 else {
-                    String userId = rs.getString("id");
-                    request.getSession().setAttribute("user", new User(username, userId));
-                    loginResponse.setSuccess("success");
+                    String fullName = rs.getString("fullname");
+                    request.getSession().setAttribute("employee", new Employee(email, fullName));
+                    loginResponse.setSuccess("login successful");
                 }
             }
             else
             {
                 // Login fail
-                loginResponse.setFail("incorrect login username");
+                loginResponse.setFail("incorrect login email");
                 // Log to localhost log
                 request.getServletContext().log("Login failed");
             }
