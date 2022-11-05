@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="site.css">
+
+    <title>Fabflix Employee Dashboard</title>
+</head>
+<body>
+
+<form id="add_star_form" method="post" action="#">
+    <label>
+        <input name="form_type" value="Add Star Form" class="form-control-plaintext" readonly>
+    </label>
+    <br>
+    <label>Star Name</label>
+    <label>
+        <input name="star_name" placeholder="Enter star name" type="text" required="required">
+    </label>
+    <br>
+    <label>Birth Year</label>
+    <label>
+        <input name="birth_year" placeholder="Enter birth year" type="text">
+    </label>
+    <br>
+    <input type="submit" value="Add Star">
+</form>
+
+<div id="add_star_message"></div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<script src="employee-dashboard.js"></script>
+
+</body>
+</html>

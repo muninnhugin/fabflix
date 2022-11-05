@@ -146,12 +146,12 @@ public class MovieListServlet extends HttpServlet {
         String pageNumber = request.getParameter("page_number");
 
         int numberOfRecords;
-        if(!isValid(recordsPerPage)) {  numberOfRecords = DEFAULT_PAGE_SIZE; }
+        if(!Helper.isValid(recordsPerPage)) {  numberOfRecords = DEFAULT_PAGE_SIZE; }
         else {  numberOfRecords = Integer.parseInt(recordsPerPage); }
 
         ArrayList<Object> argList = new ArrayList<>();
 
-        if(isValid(title))
+        if(Helper.isValid(title))
         {
             if(!title.equals("*"))
             {
@@ -160,24 +160,24 @@ public class MovieListServlet extends HttpServlet {
             }
             else {  whereClause += " AND m.title REGEXP '^[^A-Z0-9]' ";  }
         }
-        if(isValid(year))
+        if(Helper.isValid(year))
         {
             whereClause += " AND m.year = ?";
             argList.add(Integer.parseInt(year));
         }
-        if(isValid(director))
+        if(Helper.isValid(director))
         {
             whereClause += " AND m.director LIKE ?";
             argList.add(like(director));
         }
-        if(isValid(starName))
+        if(Helper.isValid(starName))
         {
             fromClause += ", stars_in_movies sm, stars s ";
             whereClause +=  " AND m.id = sm.movieId AND sm.starId = s.id " +
                     " AND s.name LIKE ? ";
             argList.add(like(starName));
         }
-        if(isValid(genreId))
+        if(Helper.isValid(genreId))
         {
             fromClause += ", genres_in_movies gm, genres g ";
             whereClause +=  " AND m.id = gm.movieId AND gm.genreId = g.id " +
@@ -237,11 +237,6 @@ public class MovieListServlet extends HttpServlet {
         return movieJsons;
     }
 
-    private boolean isValid(String param)
-    {
-        return param != null && !param.isEmpty();
-    }
-
     private String like(String param)
     {
         return param + "%";
@@ -252,15 +247,15 @@ public class MovieListServlet extends HttpServlet {
         String args = "";
         String titleArg = "";
         String ratingArg = "";
-        if(!isValid(orderBy))
+        if(!Helper.isValid(orderBy))
         {
             orderBy = "rating";
         }
-        if(!isValid(titleOrder))
+        if(!Helper.isValid(titleOrder))
         {
             titleOrder = "asc";
         }
-        if(!isValid(ratingOrder))
+        if(!Helper.isValid(ratingOrder))
         {
             ratingOrder = "desc";
         }
@@ -296,11 +291,11 @@ public class MovieListServlet extends HttpServlet {
         int recordsPerPage = 25;
         int pageNumber = 0;
 
-        if(isValid(recordsPerPageString))
+        if(Helper.isValid(recordsPerPageString))
         {
             recordsPerPage = Integer.parseInt(recordsPerPageString);
         }
-        if(isValid(pageNumberString))
+        if(Helper.isValid(pageNumberString))
         {
             pageNumber = Integer.parseInt(pageNumberString);
         }

@@ -64,22 +64,3 @@ jQuery.ajax({
 });
 
 populateTitleBrowseList();
-
-
-
-// // TODO handle genre browse submit event
-// function handleGenreBrowseSubmit(genreBrowseEvent)
-// {
-//     console.log("handling genre browse submit");
-//     genreBrowseEvent.preventDefault();
-//     movieTableBodyElement.empty();
-//     jQuery.ajax({
-//         dataType: "json", // Setting return data type
-//         method: "GET", // Setting request method
-//         url: "api/movie-list", // Setting request url, which is mapped by MovieListServlet in MovieListServlet.java
-//         data: genre_form.serialize(),
-//         success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
-//     });
-// }
-
-//genre_form.submit(handleGenreBrowseSubmit);

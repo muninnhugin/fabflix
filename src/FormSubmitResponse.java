@@ -5,7 +5,7 @@ public class FormSubmitResponse {
     private String message;
 
     private static final String SUCCESS = "success";
-    private static final String FAIL = "fail";
+    private static final String FAIL = "failure";
 
     FormSubmitResponse()
     {
@@ -23,13 +23,13 @@ public class FormSubmitResponse {
 
     public void setSuccess(String message)
     {
-        status = SUCCESS;
+        this.status = SUCCESS;
         this.message = message;
     }
 
     public void setFail(String message)
     {
-        status = FAIL;
+        this.status = FAIL;
         this.message = message;
     }
 

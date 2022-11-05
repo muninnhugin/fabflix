@@ -21,7 +21,7 @@ function handleLogin(loginResponse)
     console.log(loginResponse);
 
     if (loginResponse["status"] === "success") {
-        window.location.replace("index.html");
+        window.location.replace("employee-dashboard.html");
     } else {
         console.log("show error message");
         console.log(loginResponse["message"]);

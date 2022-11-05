@@ -1,6 +1,5 @@
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
