@@ -1,3 +1,5 @@
+import com.google.gson.JsonArray;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletConfig;
@@ -8,9 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 import static java.sql.Types.INTEGER;
 
@@ -55,6 +55,44 @@ public class EmployeeDashboardServlet extends HttpServlet {
         }
     }
 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        PrintWriter out = response.getWriter();
+
+        try (Connection connection = dataSource.getConnection())
+        {
+            String query = "SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE\n" +
+                    "FROM INFORMATION_SCHEMA.COLUMNS \n" +
+                    "WHERE TABLE_SCHEMA = 'Fabflix'\n";
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            JsonArray columnsJson = new JsonArray();
+
+            while(resultSet.next())
+            {
+                ColumnInfo columnInfo = new ColumnInfo(resultSet);
+                columnsJson.add(columnInfo.toJson());
+            }
+
+            out.write(columnsJson.toString());
+
+            response.setStatus(200);
+
+        } catch (Exception e) {
+
+            request.getServletContext().log("Error:", e);
+
+            FormSubmitResponse getResponse = new FormSubmitResponse();
+            getResponse.setFail(e.getMessage());
+            out.write(getResponse.toJson().toString());
+
+            response.setStatus(500);
+
+        } finally {
+            out.close();
+        }
+    }
+
     private FormSubmitResponse insertStar(HttpServletRequest request, Connection connection) throws SQLException {
         FormSubmitResponse response = new FormSubmitResponse();
 
@@ -90,4 +128,6 @@ public class EmployeeDashboardServlet extends HttpServlet {
 
         return response;
     }
+
+
 }
