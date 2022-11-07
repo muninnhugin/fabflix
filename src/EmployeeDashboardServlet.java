@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 import java.sql.*;
 
 import static java.sql.Types.INTEGER;
+import static java.sql.Types.VARCHAR;
 
 @WebServlet(name = "EmployeeDashboardServlet", urlPatterns = "/api/employee_dashboard")
 public class EmployeeDashboardServlet extends HttpServlet {
@@ -38,6 +39,10 @@ public class EmployeeDashboardServlet extends HttpServlet {
             if(formType.equals("Add Star Form"))
             {
                 postResponse = insertStar(request, connection);
+            }
+            else if(formType.equals("Add Movie Form"))
+            {
+                postResponse = insertMovie(request, connection);
             }
 
             // Set response status to 200 (OK)
@@ -86,7 +91,7 @@ public class EmployeeDashboardServlet extends HttpServlet {
             getResponse.setFail(e.getMessage());
             out.write(getResponse.toJson().toString());
 
-            response.setStatus(500);
+            response.setStatus(200);
 
         } finally {
             out.close();
@@ -125,6 +130,42 @@ public class EmployeeDashboardServlet extends HttpServlet {
         {
             response.setSuccess("Insert star to db successful.");
         }
+
+        return response;
+    }
+
+    private FormSubmitResponse insertMovie(HttpServletRequest request, Connection connection) throws SQLException {
+        FormSubmitResponse response = new FormSubmitResponse();
+
+        String movieTitle = request.getParameter("movie_title");
+        String movieYear = request.getParameter("movie_year");
+        String movieDirector = request.getParameter("movie_director");
+        String genreName = request.getParameter("genre_name");
+        String starName = request.getParameter("star_name");
+        String starYear = request.getParameter("star_year");
+
+        String query = "CALL add_movie(?, ?, ?, ?, ?, ?, ?, ?); \n";
+
+        CallableStatement procedure = connection.prepareCall(query);
+        procedure.setString(1, movieTitle);
+        procedure.setInt(2, Integer.parseInt(movieYear));
+        procedure.setString(3, movieDirector);
+        procedure.setString(4, genreName);
+        procedure.setString(5, starName);
+        if(Helper.isValid(starYear))
+        {
+            procedure.setInt(6, Integer.parseInt(starYear));
+        }
+        else
+        {
+            procedure.setNull(6, INTEGER);
+        }
+        procedure.registerOutParameter(7, VARCHAR);
+        procedure.registerOutParameter(8, VARCHAR);
+
+        procedure.execute();
+        String message = procedure.getString(8);
+        response.setSuccess(message);
 
         return response;
     }

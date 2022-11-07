@@ -29,12 +29,12 @@ public class LoginFilter implements Filter {
         HttpSession session = httpRequest.getSession();
 
         // Redirect to login page if the "user" attribute doesn't exist in session
-        if (session.getAttribute("user") == null
-                && session.getAttribute("employee") == null)
+        if (session.getAttribute("user") != null
+                || session.getAttribute("employee") != null)
         {
-            httpResponse.sendRedirect("login.html");
-        } else {
             chain.doFilter(request, response);
+        } else {
+            httpResponse.sendRedirect("login.html");
         }
     }
 
