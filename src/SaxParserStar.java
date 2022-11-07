@@ -1,9 +1,6 @@
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Iterator;
 
-import javax.naming.NamingException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -14,28 +11,28 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class SaxParserStar extends DefaultHandler {
-    ArrayList<Star> stars;
-
     private String tempVal;
 
     private Star star;
 
-    public SaxParserStar() {
-        stars = new ArrayList<>();
-    }
+    Connection connection;
 
-    public void runParser() {
-        parseDocument();
+    CallableStatement procedure;
+
+    public SaxParserStar() throws SQLException {
         try {
-            addToDb();
+            String addStarStatement = "CALL add_star(?, ?, ?, ?)";
+
+            Class.forName("com.mysql.jdbc.Driver");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Fabflix", "mytestuser", "My6$Password");
+            procedure = connection.prepareCall(addStarStatement);
         }
-        catch (SQLException | ClassNotFoundException | NamingException e)
-        {
+        catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
     }
 
-    private void parseDocument() {
+    private void parseStars() {
 
         //get a factory
         SAXParserFactory spf = SAXParserFactory.newInstance();
@@ -56,31 +53,19 @@ public class SaxParserStar extends DefaultHandler {
      * Iterate through the list and print
      * the contents
      */
-    private void addToDb() throws SQLException, ClassNotFoundException, NamingException {
-        Iterator<Star> it = stars.iterator();
-        while (it.hasNext()) {
-            System.out.println(it.next().toJson().toString());
-        }
-
-        String statement = "CALL add_star(?, ?, ?, ?)";
-
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Fabflix", "mytestuser", "My6$Password");
-        CallableStatement procedure = connection.prepareCall(statement);
-        for(Star star : stars)
+    private void addStarToDb() throws SQLException {
+        procedure.setString(1, star.getName());
+        if(star.getBirthYear() == 0)
         {
-            procedure.setString(1, star.getName());
-            if(star.getBirthYear() == 0)
-            {
-                procedure.setNull(2, java.sql.Types.INTEGER);
-            }
-            else {
-                procedure.setInt(2, star.getBirthYear());
-            }
-            procedure.registerOutParameter(4, Types.VARCHAR);
-            procedure.execute();
-            System.out.println(procedure.getString(4));
+            procedure.setNull(2, java.sql.Types.INTEGER);
         }
+        else {
+            procedure.setInt(2, star.getBirthYear());
+        }
+        procedure.registerOutParameter(3, Types.VARCHAR);
+        procedure.execute();
+
+        star.setId(procedure.getString(3));
     }
 
     //Event Handlers
@@ -97,8 +82,17 @@ public class SaxParserStar extends DefaultHandler {
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (qName.equalsIgnoreCase("actor")) {
-            //add it to the list
-            stars.add(star);
+            try {
+                addStarToDb();
+//                System.out.println("Inserted " + star.toJson().toString());
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
+
+            star.clearInfo();
+
         } else if (qName.equalsIgnoreCase("stagename")) {
             star.setName(tempVal);
         } else if (qName.equalsIgnoreCase("dob")) {
@@ -112,8 +106,14 @@ public class SaxParserStar extends DefaultHandler {
     }
 
     public static void main(String[] args) {
-        SaxParserStar spe = new SaxParserStar();
-        spe.runParser();
+        SaxParserStar spe = null;
+        try {
+            spe = new SaxParserStar();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        spe.parseStars();
+        System.out.println("Done parsing stars");
     }
 
 }

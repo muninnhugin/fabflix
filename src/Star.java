@@ -42,6 +42,10 @@ public class Star {
 
     int getBirthYear() { return birthYear; }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -54,6 +58,14 @@ public class Star {
     {
         movieList.add(movie);
         return this;
+    }
+
+    public void clearInfo()
+    {
+        id = "";
+        name = "";
+        birthYear = 0;
+        movieList.clear();
     }
 
     public Star setStarInfo(ResultSet rs) throws SQLException
