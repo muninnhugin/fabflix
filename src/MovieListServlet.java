@@ -123,7 +123,7 @@ public class MovieListServlet extends HttpServlet {
         return movie;
     }
 
-    // TODO test function for new PreparedStatement return
+
     private JsonArray getMoviesJson(HttpServletRequest request) throws SQLException
     {
         String selectClause = "SELECT * ";

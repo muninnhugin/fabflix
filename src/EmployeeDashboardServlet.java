@@ -101,35 +101,27 @@ public class EmployeeDashboardServlet extends HttpServlet {
     private FormSubmitResponse insertStar(HttpServletRequest request, Connection connection) throws SQLException {
         FormSubmitResponse response = new FormSubmitResponse();
 
-        String starId = Helper.getNewStarId(connection);
         String starName = request.getParameter("star_name");
         String birthYear = request.getParameter("birth_year");
 
-        String query = "INSERT INTO stars \n" +
-                "VALUES (?, ?, ?)";
+        String statement = "CALL add_star(?, ?, ?, ?)";
 
-        PreparedStatement statement = connection.prepareStatement(query);
-        statement.setString(1, starId);
-        statement.setString(2, starName);
+        CallableStatement procedure = connection.prepareCall(statement);
+        procedure.setString(1, starName);
         if(Helper.isValid(birthYear))
         {
-            statement.setInt(3, Integer.parseInt(birthYear));
+            procedure.setInt(2, Integer.parseInt(birthYear));
         }
         else
         {
-            statement.setNull(3, INTEGER);
+            procedure.setNull(2, INTEGER);
         }
+        procedure.registerOutParameter(4, VARCHAR);
 
-        int rowsAffected = statement.executeUpdate();
+        procedure.execute();
 
-        if (rowsAffected == 0)
-        {
-            response.setFail("Failed to insert star to db.");
-        }
-        else
-        {
-            response.setSuccess("Insert star to db successful.");
-        }
+        String message = procedure.getString(4);
+        response.setSuccess(message);
 
         return response;
     }

@@ -46,8 +46,7 @@ function handleAddStarResponse(response) {
     console.log("printing add star request status");
     let add_star_message = jQuery("#add_star_message");
     add_star_message.empty();
-    let message = "Status: " + response["status"] + "<br>" +
-        "Message: " + response["message"]
+    let message = response["message"];
     add_star_message.append(message);
 
 }
