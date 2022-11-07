@@ -112,6 +112,7 @@ public class SaxParserStar extends DefaultHandler {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        assert spe != null;
         spe.parseStars();
         System.out.println("Done parsing stars");
     }
