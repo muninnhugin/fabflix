@@ -5,10 +5,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Star {
-    String id = "";
-    String name = "";
+    String id;
+    String name;
     int birthYear;
     ArrayList<Movie> movieList;
+
+    Star()
+    {
+        movieList = new ArrayList<>();
+    }
 
     Star(String newId, String newName, int newBirthYear)
     {
@@ -36,6 +41,14 @@ public class Star {
     }
 
     int getBirthYear() { return birthYear; }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setBirthYear(int birthYear) {
+        this.birthYear = birthYear;
+    }
 
     public Star addMovie(Movie movie)
     {
