@@ -20,5 +20,9 @@ Files with CallableStatement, inheriting from PreparedStatement:
 Inconsistent XML data:
     For actors63.xml, any missing or non-integer dob listed is considered 'null' when inserting to database.
     For mains243.xml, any missing or non-integer movie year is considered '0' when inserting to database.
+    For casts124.xml, stars listed as 'sa' are not considered actual stars, and thus not linked to a movie.
+    
+Parsing optimization strategy:
+    To free up memory using the SAX Parsing method, each star/movie entry are inserted to the database individually, not as an array list of stars/movies.
 
 All contribution made by Ha Bach (bachh1).
