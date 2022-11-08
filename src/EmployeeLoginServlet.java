@@ -47,7 +47,7 @@ public class EmployeeLoginServlet extends HttpServlet {
             if(rs.next())
             {
                 String correctPassword = rs.getString("password");
-                if(!new StrongPasswordEncryptor().checkPassword(password, correctPassword))
+                if(!password.equals(correctPassword))
                 {
                     loginResponse.setFail("incorrect login password");
                     request.getServletContext().log("Login failed");
