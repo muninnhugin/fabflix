@@ -11,13 +11,12 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class SaxParserStar extends DefaultHandler {
-    private String tempVal;
+    private Connection connection;
+    private CallableStatement procedure;
 
+    private String tempVal;
     private Star star;
 
-    Connection connection;
-
-    CallableStatement procedure;
 
     public SaxParserStar() throws SQLException {
         try {
@@ -49,10 +48,6 @@ public class SaxParserStar extends DefaultHandler {
         }
     }
 
-    /**
-     * Iterate through the list and print
-     * the contents
-     */
     private void addStarToDb() throws SQLException {
         procedure.setString(1, star.getName());
         if(star.getBirthYear() == 0)
@@ -62,10 +57,11 @@ public class SaxParserStar extends DefaultHandler {
         else {
             procedure.setInt(2, star.getBirthYear());
         }
-        procedure.registerOutParameter(3, Types.VARCHAR);
+        procedure.registerOutParameter(4, Types.VARCHAR);
         procedure.execute();
 
         star.setId(procedure.getString(3));
+//        System.out.println(procedure.getString(4));
     }
 
     //Event Handlers

@@ -17,5 +17,8 @@ Files with PreparedStatement:
 Files with CallableStatement, inheriting from PreparedStatement:
     [src/EmployeeDashboardServlet.java](https://github.com/uci-jherold2-teaching/cs122b-fall-team-4/blob/main/src/EmployeeDashboardServlet.java)
         
+Inconsistent XML data:
+    For actors63.xml, any missing or non-integer dob listed is considered 'null' when inserting to database.
+    For mains243.xml, any missing or non-integer movie year is considered '0' when inserting to database.
 
 All contribution made by Ha Bach (bachh1).

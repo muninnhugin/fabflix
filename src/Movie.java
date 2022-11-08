@@ -15,6 +15,12 @@ public class Movie {
     private ArrayList<Genre> genreList;
     private ArrayList<Star> starList;
 
+    Movie()
+    {
+        genreList = new ArrayList<>();
+        starList = new ArrayList<>();
+    }
+
     Movie(String newId, String newTitle, int newYear, String newDirector, double newRating)
     {
         id = newId;
@@ -59,6 +65,26 @@ public class Movie {
 
     public ArrayList<Genre> getGenreList() {
         return genreList;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setDirector(String director) {
+        this.director = director;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
     }
 
     public Movie addGenre(Genre newGenre)
