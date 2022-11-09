@@ -149,6 +149,40 @@ END $$
 DELIMITER ;
 
 DELIMITER $$
+CREATE FUNCTION find_star_id_by_name(star_name VARCHAR(100))
+RETURNS VARCHAR(10)
+READS SQL DATA
+BEGIN
+	DECLARE star_id VARCHAR(10);
+    
+	SELECT id
+	INTO star_id
+	FROM stars
+	WHERE name = star_name
+	LIMIT 1;
+	
+    RETURN star_id;    
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE FUNCTION find_movie_id_by_title(movie_title VARCHAR(100))
+RETURNS VARCHAR(10)
+READS SQL DATA
+BEGIN
+	DECLARE movie_id VARCHAR(10);
+    
+	SELECT id
+	INTO movie_id
+	FROM movies
+	WHERE title = movie_title
+	LIMIT 1;
+	
+    RETURN movie_id;    
+END $$
+DELIMITER ;
+
+DELIMITER $$
 CREATE FUNCTION get_next_id(`table_name` VARCHAR(32) ) 
 RETURNS INTEGER
 READS SQL DATA
@@ -217,4 +251,25 @@ BEGIN
     RETURN genre_id;
 END $$
 DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE link_star_name_to_movie_title(
+	IN star_name VARCHAR(100),
+    IN movie_title VARCHAR(100)	)
+BEGIN
+	DECLARE star_id VARCHAR(10);
+    DECLARE movie_id VARCHAR(10);
+    
+    SET star_id = find_star_id_by_name(star_name);
+    SET movie_id = find_movie_id_by_title(movie_title);
+    
+    IF star_id IS NOT NULL AND movie_id IS NOT NULL THEN
+		INSERT INTO stars_in_movies (starId, movieId)
+			VALUES(star_id, movie_id);
+	END IF;
+    
+END $$
+DELIMITER ;
+
+
 
