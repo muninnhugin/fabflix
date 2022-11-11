@@ -46,12 +46,10 @@ public class MovieListServlet extends HttpServlet {
         {
             JsonArray movieJsons = getMoviesJson(request);
 
-            // Log to localhost log
             request.getServletContext().log("getting " + movieJsons.size() + " results");
 
-            // Write JSON string to output
             out.write(movieJsons.toString());
-            // Set response status to 200 (OK)
+
             response.setStatus(200);
 
         } catch (Exception e) {

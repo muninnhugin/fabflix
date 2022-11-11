@@ -2,6 +2,7 @@ const NUM_OF_ALPHABET_LETTERS = 26;
 
 let search_form = jQuery("#search_form");
 let genre_list = jQuery("#genre_browse_list");
+let title_search_bar = jQuery("#title_search_bar");
 
 function handleSearchSubmit(searchEvent)
 {
@@ -53,7 +54,59 @@ function populateTitleBrowseList()
     title_browse_list.append(title_html);
 }
 
-search_form.submit(handleSearchSubmit);
+function handleLookupAjaxSuccess(data, query, doneCallback) {
+    console.log("lookup ajax successful")
+
+    // parse the string into JSON
+    let jsonData = JSON.parse(data);
+    console.log(jsonData)
+
+    // TODO: if you want to cache the result into a global variable you can do it here
+
+    // call the callback function provided by the autocomplete library
+    // add "{suggestions: jsonData}" to satisfy the library response format according to
+    //   the "Response Format" section in documentation
+    doneCallback( { suggestions: jsonData } );
+}
+
+function handleLookup(query, doneCallback) {
+    console.log("autocomplete initiated")
+    console.log("sending AJAX request to backend Java Servlet")
+
+    // TODO: if you want to check past query results first, you can do it here
+
+    jQuery.ajax({
+        "method": "GET",
+        "url": "movie_title_autocomplete?query=" + escape(query),
+        "success": function(data) {
+            handleLookupAjaxSuccess(data, query, doneCallback)
+        },
+        "error": function(errorData) {
+            console.log("lookup ajax error")
+            console.log(errorData)
+        }
+    })
+}
+
+function handleSelectSuggestion(suggestion) {
+    let redirectUrl = "single-movie.html?id=" + suggestion["data"];
+    console.log("redirecting to " + redirectUrl);
+    window.location.assign(redirectUrl);
+}
+
+title_search_bar.autocomplete({
+    lookup: function (query, doneCallback) {
+        handleLookup(query, doneCallback)
+    },
+    onSelect: function(suggestion) {
+        handleSelectSuggestion(suggestion)
+    },
+    // set delay time
+    deferRequestBy: 300,
+    minChars: 3,
+    lookupLimit: 10
+});
+
 
 // requests list of genres
 jQuery.ajax({
@@ -63,4 +116,5 @@ jQuery.ajax({
     success: (genreListData) => populateGenreBrowseList(genreListData) // Setting callback function to handle data returned successfully by the StarsServlet
 });
 
+search_form.submit(handleSearchSubmit);
 populateTitleBrowseList();

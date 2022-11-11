@@ -23,9 +23,16 @@
 </head>
 <body>
 <button id="checkout_button" class="btn btn-primary" onclick="cartRedirect()">Checkout</button>
+
+<label for="genre_browse_list">Browse by Genre</label>
+<div id="genre_browse_list" class="browse_list"></div>
+
+<label for="title_browse_list">Browse by Title</label>
+<div id="title_browse_list"></div>
+
 <form id="search_form" method="get" action="#">
     <label>
-        <input name="title" placeholder="Enter movie title" type="text">
+        <input id="title_search_bar" class="autocomplete-searchbox" name="title" placeholder="Enter movie title" type="text">
     </label>
     <label>
         <input name="year" placeholder="Enter movie year" type="text">
@@ -39,16 +46,11 @@
     <input type="submit" value="Search">
 </form>
 
-<label for="genre_browse_list">Browse by Genre</label>
-<div id="genre_browse_list" class="browse_list"></div>
 
-<label for="title_browse_list">Browse by Title</label>
-<div id="title_browse_list"></div>
-
-<!-- Load jQuery and Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.11/jquery.autocomplete.min.js"></script>
 
 <script src="index.js"></script>
 <script src="redirect.js"></script>
