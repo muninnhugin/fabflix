@@ -155,8 +155,13 @@ public class MovieListServlet extends HttpServlet {
         {
             if(!title.equals("*"))
             {
-                whereClause += " AND m.title LIKE ?";
-                argList.add(like(title));
+                String[] tokens = title.split(" ");
+                whereClause += " AND MATCH(m.title) AGAINST ('";
+                for(String token : tokens)
+                {
+                    whereClause += "+" + token + "* ";
+                }
+                whereClause += "' IN BOOLEAN MODE)";
             }
             else {  whereClause += " AND m.title REGEXP '^[^A-Z0-9]' ";  }
         }
