@@ -10,6 +10,9 @@
 <!-- Set the method to POST to avoid showing the username/password in the URL
      The default action is disabled to allow your own implementation. -->
 <form id="login_form" method="post" action="#">
+    <label>
+        <input name="form_source" value="website" class="form-control-plaintext" type="hidden">
+    </label>
     <label><b>Username</b></label>
     <label>
         <input name="username" placeholder="Enter Username" type="text">
