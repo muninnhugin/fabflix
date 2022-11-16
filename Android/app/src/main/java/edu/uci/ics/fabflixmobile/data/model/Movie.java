@@ -19,4 +19,12 @@ public class Movie {
     public short getYear() {
         return year;
     }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "name='" + name + '\'' +
+                ", year=" + year +
+                '}';
+    }
 }
