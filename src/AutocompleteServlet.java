@@ -38,12 +38,12 @@ public class AutocompleteServlet extends HttpServlet {
 
             if(tokens.length > 1) {
                  statementStr = "SELECT id, title\n" +
-                        "FROM movies\n" +
-                        "WHERE MATCH(title) AGAINST('";
+                         "FROM movies\n" +
+                         "WHERE MATCH(title) AGAINST('";
                 for (String token : tokens) {
                     statementStr += "+" + token + "* ";
                 }
-                statementStr += "')" + "" +
+                statementStr += "' IN BOOLEAN MODE)\n" +
                         "LIMIT " + MAX_SUGGESTIONS;
             }
             else
@@ -52,7 +52,7 @@ public class AutocompleteServlet extends HttpServlet {
                         "FROM movies\n" +
                         "WHERE MATCH(title) AGAINST('" + tokens[0] + "') " +
                         "OR MATCH(title) AGAINST('" + tokens[0] + "*' IN BOOLEAN MODE) \n" +
-                        "LIMIT " + MAX_SUGGESTIONS;
+                        " LIMIT " + MAX_SUGGESTIONS;
             }
 
 

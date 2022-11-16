@@ -63,9 +63,10 @@ function handleLookupAjaxSuccess(data, query, doneCallback) {
     let jsonData = JSON.parse(data);
     console.log(jsonData)
 
-    // TODO: if you want to cache the result into a global variable you can do it here
     if(!autocomplete_cache.has(query)) {
+
         autocomplete_cache.set(query, data);
+        console.log("adding query to autocomplete cache");
     }
     // call the callback function provided by the autocomplete library
     // add "{suggestions: jsonData}" to satisfy the library response format according to
@@ -76,10 +77,9 @@ function handleLookupAjaxSuccess(data, query, doneCallback) {
 function handleLookup(query, doneCallback) {
     console.log("autocomplete initiated");
 
-    // TODO: if you want to check past query results first, you can do it here
     if(autocomplete_cache.has(query))
     {
-        console.log("fetching autocomplete cache result for movie tiles");
+        console.log("fetching autocomplete cache result for movie titles");
         handleLookupAjaxSuccess(autocomplete_cache.get(query), query, doneCallback);
     }
     else {
