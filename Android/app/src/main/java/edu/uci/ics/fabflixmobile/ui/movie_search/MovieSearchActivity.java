@@ -45,27 +45,10 @@ public class MovieSearchActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     public void search() {
         searchMessage.setText("Searching for movie title");
-        final RequestQueue queue = NetworkManager.sharedManager(this).queue;
-        final StringRequest searchRequest = new StringRequest(
-                Request.Method.GET,
-                baseURL + "/api/movie-list",
-                response -> {
-                    Log.d("search.success", "successful movie title search");
-                    finish();
-                    Intent MovieListPage = new Intent(MovieSearchActivity.this, MovieListActivity.class);
-                    startActivity(MovieListPage);
-                },
-                error -> {
-                    Log.d("search.error", error.toString());
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                final Map<String, String> params = new HashMap<>();
-                params.put("title", searchBar.getText().toString());
-                return params;
-            }
-        };
-
-        queue.add(searchRequest);
+        Log.d("search.success", "search");
+        finish();
+        Intent MovieListPage = new Intent(MovieSearchActivity.this, MovieListActivity.class);
+        MovieListPage.putExtra("title", searchBar.getText().toString());
+        startActivity(MovieListPage);
     }
 }
