@@ -4,6 +4,8 @@ let search_form = jQuery("#search_form");
 let genre_list = jQuery("#genre_browse_list");
 let title_search_bar = jQuery("#title_search_bar");
 
+let autocomplete_cache = new Map();
+
 function handleSearchSubmit(searchEvent)
 {
     console.log("handling search submit");
@@ -62,7 +64,9 @@ function handleLookupAjaxSuccess(data, query, doneCallback) {
     console.log(jsonData)
 
     // TODO: if you want to cache the result into a global variable you can do it here
-
+    if(!autocomplete_cache.has(query)) {
+        autocomplete_cache.set(query, data);
+    }
     // call the callback function provided by the autocomplete library
     // add "{suggestions: jsonData}" to satisfy the library response format according to
     //   the "Response Format" section in documentation
@@ -70,22 +74,28 @@ function handleLookupAjaxSuccess(data, query, doneCallback) {
 }
 
 function handleLookup(query, doneCallback) {
-    console.log("autocomplete initiated")
-    console.log("sending AJAX request to backend Java Servlet")
+    console.log("autocomplete initiated");
 
     // TODO: if you want to check past query results first, you can do it here
-
-    jQuery.ajax({
-        "method": "GET",
-        "url": "movie_title_autocomplete?query=" + escape(query),
-        "success": function(data) {
-            handleLookupAjaxSuccess(data, query, doneCallback)
-        },
-        "error": function(errorData) {
-            console.log("lookup ajax error")
-            console.log(errorData)
-        }
-    })
+    if(autocomplete_cache.has(query))
+    {
+        console.log("fetching autocomplete cache result for movie tiles");
+        handleLookupAjaxSuccess(autocomplete_cache.get(query), query, doneCallback);
+    }
+    else {
+        console.log("sending AJAX call for autocomplete movie titles")
+        jQuery.ajax({
+            "method": "GET",
+            "url": "movie_title_autocomplete?query=" + escape(query),
+            "success": function (data) {
+                handleLookupAjaxSuccess(data, query, doneCallback)
+            },
+            "error": function (errorData) {
+                console.log("lookup ajax error")
+                console.log(errorData)
+            }
+        })
+    }
 }
 
 function handleSelectSuggestion(suggestion) {
