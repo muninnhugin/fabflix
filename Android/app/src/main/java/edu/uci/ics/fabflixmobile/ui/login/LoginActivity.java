@@ -21,6 +21,7 @@ import org.json.JSONObject;
 
 import edu.uci.ics.fabflixmobile.data.NetworkManager;
 import edu.uci.ics.fabflixmobile.databinding.ActivityLoginBinding;
+import edu.uci.ics.fabflixmobile.ui.movie_search.MovieSearchActivity;
 import edu.uci.ics.fabflixmobile.ui.movielist.MovieListActivity;
 
 import java.util.HashMap;
@@ -69,8 +70,6 @@ public class LoginActivity extends AppCompatActivity {
                 Request.Method.POST,
                 baseURL + "/api/login",
                 response -> {
-                    // TODO: should parse the json response to redirect to appropriate functions
-                    //  upon different response value.
                     try {
                         JSONObject responseJson = new JSONObject(response);
                         String responseStatus = responseJson.getString("status");
@@ -80,8 +79,8 @@ public class LoginActivity extends AppCompatActivity {
                         {
                             Log.d("login.success", responseMessage);
                             finish();
-                            Intent MovieListPage = new Intent(LoginActivity.this, MovieListActivity.class);
-                            startActivity(MovieListPage);
+                            Intent MovieSearchPage = new Intent(LoginActivity.this, MovieSearchActivity.class);
+                            startActivity(MovieSearchPage);
                         }
                         else
                         {
@@ -93,12 +92,10 @@ public class LoginActivity extends AppCompatActivity {
 
                 },
                 error -> {
-                    // error
                     Log.d("login.error", error.toString());
                 }) {
             @Override
             protected Map<String, String> getParams() {
-                // POST request form data
                 final Map<String, String> params = new HashMap<>();
                 params.put("username", username.getText().toString());
                 params.put("password", password.getText().toString());
