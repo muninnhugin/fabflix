@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
 
-@WebServlet("/movie_title_autocomplete")
+@WebServlet("/api/movie_title_autocomplete")
 public class AutocompleteServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final int MAX_SUGGESTIONS = 10;

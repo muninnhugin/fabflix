@@ -86,7 +86,7 @@ function handleLookup(query, doneCallback) {
         console.log("sending AJAX call for autocomplete movie titles")
         jQuery.ajax({
             "method": "GET",
-            "url": "movie_title_autocomplete?query=" + escape(query),
+            "url": "api/movie_title_autocomplete?query=" + escape(query),
             "success": function (data) {
                 handleLookupAjaxSuccess(data, query, doneCallback)
             },
