@@ -13,4 +13,6 @@
     <string name="prompt_movie_title">Enter movie title</string>
     <string name="movie_title_prompt">Enter movie title</string>
     <string name="action_search">Search</string>
+    <string name="prev">PREV</string>
+    <string name="next">NEXT</string>
 </resources>

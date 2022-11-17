@@ -22,7 +22,6 @@ import org.json.JSONObject;
 import edu.uci.ics.fabflixmobile.data.NetworkManager;
 import edu.uci.ics.fabflixmobile.databinding.ActivityLoginBinding;
 import edu.uci.ics.fabflixmobile.ui.movie_search.MovieSearchActivity;
-import edu.uci.ics.fabflixmobile.ui.movielist.MovieListActivity;
 
 import java.util.HashMap;
 import java.util.Map;

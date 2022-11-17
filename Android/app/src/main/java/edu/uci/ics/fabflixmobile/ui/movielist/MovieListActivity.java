@@ -3,6 +3,7 @@ package edu.uci.ics.fabflixmobile.ui.movielist;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -25,13 +26,37 @@ import edu.uci.ics.fabflixmobile.data.model.Movie;
 import java.util.ArrayList;
 
 public class MovieListActivity extends AppCompatActivity {
-    ArrayList<Movie> movies = new ArrayList<>();
+    ArrayList<Movie> movies = null;
+    int pageNumber = 0;
+    Button prevBtn;
+    Button nextBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movielist);
-        // TODO: this should be retrieved from the backend server
+
+        getMovieList();
+
+        prevBtn = findViewById(R.id.prev_btn);
+        nextBtn = findViewById(R.id.next_btn);
+
+        prevBtn.setOnClickListener(view -> {
+            if(pageNumber <= 0) return;
+            --pageNumber;
+            getMovieList();
+        });
+
+        nextBtn.setOnClickListener(view -> {
+            if(movies != null && movies.size() <= 0) return;
+            ++pageNumber;
+            getMovieList();
+        });
+
+    }
+
+    private void getMovieList()
+    {
         Intent intent = getIntent();
         String title = intent.getStringExtra("title");
 
@@ -40,10 +65,13 @@ public class MovieListActivity extends AppCompatActivity {
         final String port = "8080";
         final String domain = "Fabflix_war";
         final String baseURL = "http://" + host + ":" + port + "/" + domain;
+        final int entriesPerPage = 20;
 
         final StringRequest loginRequest = new StringRequest(
                 Request.Method.GET,
-                baseURL + "/api/movie-list?title=" + title,
+                baseURL + "/api/movie-list?title=" + title +
+                        "&page_number=" + pageNumber +
+                        "&records_per_page=" + entriesPerPage,
                 response -> {
                     try {
                         processResponse(response);
@@ -56,15 +84,11 @@ public class MovieListActivity extends AppCompatActivity {
                     Log.d("movieList.error", error.toString());
                 });
         queue.add(loginRequest);
-
-        for(Movie movie : movies)
-        {
-            Log.d("MovieListStatus", movie.toString());
-        }
     }
 
     private void processResponse(String response) throws JSONException {
         Log.d("MovieListStatus", "processing json response");
+        movies = new ArrayList<>();
         JSONArray moviesJson = new JSONArray(response);
         for(int i = 0; i < moviesJson.length(); ++i) {
             JSONObject movieJson = moviesJson.getJSONObject(i);
