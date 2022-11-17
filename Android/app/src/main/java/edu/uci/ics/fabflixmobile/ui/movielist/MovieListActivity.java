@@ -1,11 +1,9 @@
 package edu.uci.ics.fabflixmobile.ui.movielist;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,6 +20,7 @@ import org.json.JSONObject;
 import edu.uci.ics.fabflixmobile.R;
 import edu.uci.ics.fabflixmobile.data.NetworkManager;
 import edu.uci.ics.fabflixmobile.data.model.Movie;
+import edu.uci.ics.fabflixmobile.ui.singlemovie.SingleMovieActivity;
 
 import java.util.ArrayList;
 
@@ -80,9 +79,7 @@ public class MovieListActivity extends AppCompatActivity {
                     }
                     callAdapter();
                 },
-                error -> {
-                    Log.d("movieList.error", error.toString());
-                });
+                error -> Log.d("movieList.error", error.toString()));
         queue.add(loginRequest);
     }
 
@@ -105,8 +102,9 @@ public class MovieListActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Movie movie = movies.get(position);
-            @SuppressLint("DefaultLocale") String message = String.format("Clicked on position: %d, name: %s, %d", position, movie.getName(), movie.getYear());
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            Intent SingleMoviePage = new Intent(MovieListActivity.this, SingleMovieActivity.class);
+            SingleMoviePage.putExtra("movieId", movie.getId());
+            startActivity(SingleMoviePage);
         });
     }
 }

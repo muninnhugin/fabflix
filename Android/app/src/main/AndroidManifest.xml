@@ -14,6 +14,7 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".ui.movielist.MovieListActivity"/>
         <activity android:name=".ui.movie_search.MovieSearchActivity"/>
+        <activity android:name=".ui.singlemovie.SingleMovieActivity"/>
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true"
