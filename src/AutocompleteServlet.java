@@ -43,7 +43,7 @@ public class AutocompleteServlet extends HttpServlet {
                 for (String token : tokens) {
                     statementStr += "+" + token + "* ";
                 }
-                statementStr += "' IN BOOLEAN MODE)\n";
+                statementStr += "' IN BOOLEAN MODE) \n";
             }
             else
             {

@@ -154,14 +154,28 @@ public class MovieListServlet extends HttpServlet {
             if(!title.equals("*"))
             {
                 String[] tokens = title.split(" ");
-                whereClause += " AND MATCH(m.title) AGAINST ('";
+
+                //full text search
+                whereClause += " AND (MATCH(m.title) AGAINST ('";
                 for(String token : tokens)
                 {
                     whereClause += "+" + token + "* ";
                 }
-                whereClause += "' IN BOOLEAN MODE)";
+                whereClause += "' IN BOOLEAN MODE)\n";
+
+                //fuzzy search
+                whereClause += "OR title LIKE '%";
+                for(String token : tokens)
+                {
+                    whereClause += token + "%";
+                }
+                whereClause += "' \n";
+                whereClause += "OR edth('" + title + "', title, 2) \n";
+                whereClause += "OR SOUNDEX('" + title + "') = SOUNDEX(title)) \n";
             }
+
             else {  whereClause += " AND m.title REGEXP '^[^A-Z0-9]' ";  }
+
         }
         if(Helper.isValid(year))
         {
