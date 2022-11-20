@@ -25,11 +25,6 @@ public class MovieSearchActivity extends AppCompatActivity {
     private EditText searchBar;
     private TextView searchMessage;
 
-    private final String host = "10.0.2.2";
-    private final String port = "8080";
-    private final String domain = "Fabflix_war";
-    private final String baseURL = "http://" + host + ":" + port + "/" + domain;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

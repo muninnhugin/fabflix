@@ -19,6 +19,11 @@ import edu.uci.ics.fabflixmobile.data.NetworkManager;
 import edu.uci.ics.fabflixmobile.data.model.Movie;
 
 public class SingleMovieActivity extends AppCompatActivity {
+    private final String host = "ec2-52-91-203-240.compute-1.amazonaws.com";
+    private final String port = "8443";
+    private final String domain = "Fabflix";
+    private final String baseURL = "https://" + host + ":" + port + "/" + domain;
+
     Movie movie;
 
     protected void onCreate(Bundle savedInstanceState){
@@ -29,10 +34,6 @@ public class SingleMovieActivity extends AppCompatActivity {
         String movieId = intent.getStringExtra("movieId");
 
         final RequestQueue queue = NetworkManager.sharedManager(this).queue;
-        final String host = "10.0.2.2";
-        final String port = "8080";
-        final String domain = "Fabflix_war";
-        final String baseURL = "http://" + host + ":" + port + "/" + domain;
 
         final StringRequest movieRequest = new StringRequest(
                 Request.Method.GET,

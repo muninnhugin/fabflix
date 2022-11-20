@@ -60,10 +60,10 @@ public class MovieListActivity extends AppCompatActivity {
         String title = intent.getStringExtra("title");
 
         final RequestQueue queue = NetworkManager.sharedManager(this).queue;
-        final String host = "10.0.2.2";
-        final String port = "8080";
-        final String domain = "Fabflix_war";
-        final String baseURL = "http://" + host + ":" + port + "/" + domain;
+        final String host = "ec2-52-91-203-240.compute-1.amazonaws.com";
+        final String port = "8443";
+        final String domain = "Fabflix";
+        final String baseURL = "https://" + host + ":" + port + "/" + domain;
         final int entriesPerPage = 20;
 
         final StringRequest loginRequest = new StringRequest(
