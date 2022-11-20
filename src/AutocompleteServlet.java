@@ -47,7 +47,7 @@ public class AutocompleteServlet extends HttpServlet {
             }
             else
             {
-                statementStr = tokens[0] + "') " +
+                statementStr += tokens[0] + "') " +
                         "OR MATCH(title) AGAINST('" + tokens[0] + "*' IN BOOLEAN MODE) \n";
             }
 
