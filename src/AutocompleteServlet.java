@@ -34,26 +34,34 @@ public class AutocompleteServlet extends HttpServlet {
 
             String query = request.getParameter("query");
             String[] tokens = query.split(" ");
-            String statementStr = null;
+            String statementStr = "SELECT id, title\n" +
+                    "FROM movies\n" +
+                    "WHERE MATCH(title) AGAINST('";
 
+            // full text search
             if(tokens.length > 1) {
-                 statementStr = "SELECT id, title\n" +
-                         "FROM movies\n" +
-                         "WHERE MATCH(title) AGAINST('";
                 for (String token : tokens) {
                     statementStr += "+" + token + "* ";
                 }
-                statementStr += "' IN BOOLEAN MODE)\n" +
-                        "LIMIT " + MAX_SUGGESTIONS;
+                statementStr += "' IN BOOLEAN MODE)\n";
             }
             else
             {
-                statementStr = "SELECT id, title\n" +
-                        "FROM movies\n" +
-                        "WHERE MATCH(title) AGAINST('" + tokens[0] + "') " +
-                        "OR MATCH(title) AGAINST('" + tokens[0] + "*' IN BOOLEAN MODE) \n" +
-                        " LIMIT " + MAX_SUGGESTIONS;
+                statementStr = tokens[0] + "') " +
+                        "OR MATCH(title) AGAINST('" + tokens[0] + "*' IN BOOLEAN MODE) \n";
             }
+
+            // fuzzy search
+            statementStr += "OR title LIKE '%";
+            for(String token : tokens)
+            {
+                statementStr += token + "%";
+            }
+            statementStr += "' \n";
+            statementStr += "OR edth('" + query + "', title, 1) \n";
+            statementStr += "OR SOUNDEX('" + query + "') = SOUNDEX(title) \n";
+
+            statementStr += "LIMIT " + MAX_SUGGESTIONS;
 
 
             Statement statement = connection.createStatement();
