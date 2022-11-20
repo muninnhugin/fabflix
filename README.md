@@ -1,28 +1,18 @@
 # cs122b-fall-team-4
 
-Team 4
-
-Demo video URL: https://youtu.be/ppnTKGY2Awk
-
 Deployment as usual. Like star example or login example.
 
-Files with PreparedStatement:
-    [src/EmployeeLoginServlet.java](https://github.com/uci-jherold2-teaching/cs122b-fall-team-4/blob/main/src/EmployeeLoginServlet.java)
-    [src/LoginServlet.java](https://github.com/uci-jherold2-teaching/cs122b-fall-team-4/blob/main/src/LoginServlet.java)
-    [src/MovieListServlet.java](https://github.com/uci-jherold2-teaching/cs122b-fall-team-4/blob/main/src/MovieListServlet.java)
-    [src/PaymentServlet.java](https://github.com/uci-jherold2-teaching/cs122b-fall-team-4/blob/main/src/PaymentServlet.java)
-    [src/SingleMovieServlet.java](https://github.com/uci-jherold2-teaching/cs122b-fall-team-4/blob/main/src/SingleMovieServlet.java)
-    [src/SingleStarServlet.java](https://github.com/uci-jherold2-teaching/cs122b-fall-team-4/blob/main/src/SingleStarServlet.java)
-    
-Files with CallableStatement, inheriting from PreparedStatement:
-    [src/EmployeeDashboardServlet.java](https://github.com/uci-jherold2-teaching/cs122b-fall-team-4/blob/main/src/EmployeeDashboardServlet.java)
-        
-Inconsistent XML data:
-    For actors63.xml, any missing or non-integer dob listed is considered 'null' when inserting to database.
-    For mains243.xml, any missing or non-integer movie year is considered '0' when inserting to database.
-    For casts124.xml, stars listed as 'sa' are not considered actual stars, and thus not linked to a movie.
-    
-Parsing optimization strategy:
-    To free up memory using the SAX Parsing method, each star/movie entry are inserted to the database individually, not as an array list of stars/movies.
+**[Demo video](https://youtu.be/ppnTKGY2Awk)** TODO UPDATE DEMO VIDEO LINK
+
+#### Fuzzy Search Implementation
+For autocomplete, web search, and Android search, fuzzy search is implement as follow
+##### SQL Pattern Matching
+All queries are broken into tokens, each token are matched as %token% in SQL.
+So for query "good u", the servlets ask the database for %good%u%
+##### LEDA using the Flamingo library
+Since the autocomplete will deal with short queries, edit distance for edth is set as 1 to avoid results that are too different from the query.
+For web search and Android search, edit distance is set as 2 because queries are assumed to be close to what the user wants to search for.
+##### Soundex
+The soundex of the entire query is match against the database's movie titles.
 
 All contribution made by Ha Bach (bachh1).
