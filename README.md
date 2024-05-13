@@ -1,6 +1,3 @@
-# cs122b-fall-team-4
-Deployment as usual. Like star example or login example.
-
 [Demo video](https://youtu.be/jjIteTzxjOE)
 
 All contribution made by Ha Bach (bachh1).
